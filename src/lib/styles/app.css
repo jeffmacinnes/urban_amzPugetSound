@@ -37,7 +37,12 @@ body {
 	color: var(--color-g1);
 	letter-spacing: 0.005em;
 	box-sizing: border-box;
-	overflow-x: hidden;
+	/* overflow-x: hidden; */
+}
+
+html,
+body {
+	margin: 0;
 }
 
 h1 {
