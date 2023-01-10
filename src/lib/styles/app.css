@@ -1,5 +1,6 @@
 @import 'variables.css';
 @import 'font.css';
+@import 'mapbox-gl/dist/mapbox-gl.css';
 
 /* colors defined in variables.css */
 

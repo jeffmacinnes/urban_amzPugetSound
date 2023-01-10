@@ -10,9 +10,6 @@
 	import { MotionPathHelper } from 'gsap/MotionPathHelper';
 	import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 	import { onMount } from 'svelte';
-	import { tweened } from 'svelte/motion';
-	import * as easings from 'svelte/easing';
-
 	export let viewportDims = [0, 0];
 	export let flyTo = [0.5, 0.5]; // as proportion
 	export let scale = 1;
@@ -117,7 +114,7 @@
 <style>
 	.bg-container {
 		position: relative;
-		border: solid 1px red;
+		/* border: solid 1px red; */
 		width: 1728px;
 		height: 1728px;
 		max-width: 1728px;
