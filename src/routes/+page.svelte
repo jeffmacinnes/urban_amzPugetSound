@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Scroll Test</title>
+	<title>Urban - Amz Puget Sound</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
