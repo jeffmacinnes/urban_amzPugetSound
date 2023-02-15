@@ -74,7 +74,12 @@ export const geoData = derived(jurisdiction, ($jurisdiction, set) => {
 	getGeo($jurisdiction).then((data) => set(data));
 });
 
-export const demographicLayer = derived(
-	[jurisdiction, demographic],
-	([$jurisdiction, $demographic]) => {}
-);
+// --- Define the data for each layer based on current options
+// export const demographicLayerData = derived(
+// 	[jurisdiction, demographic],
+// 	([$jurisdiction, $demographic]) => {
+// 		console.log('demo layer data', $demographic);
+
+// 		return tractData;
+// 	}
+// );

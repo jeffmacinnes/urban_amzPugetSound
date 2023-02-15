@@ -22,6 +22,7 @@
 		"@types/cookie": "^0.5.1",
 		"archieml": "^0.5.0",
 		"autoprefixer": "^10.4.13",
+		"chroma-js": "^2.4.2",
 		"csvtojson": "^2.0.10",
 		"d3": "^7.7.0",
 		"deck.gl": "^8.8.22",
