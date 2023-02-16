@@ -11,22 +11,38 @@
 	} from '$stores/siteData';
 
 	let controls = [
-		{ name: 'jurisdiction', currentValue: '', opts: $jurisdictionOpts },
-		{ name: 'demographic', currentValue: '', opts: $demographicOpts },
-		{ name: 'station', currentValue: '', opts: $stationTypeOpts },
-		{ name: 'reform', currentValue: '', opts: $reformTypeOpts }
+		{
+			name: 'Jurisdiction',
+			currentValue: $jurisdictionOpts.find((d) => d.display === 'Seattle'),
+			opts: $jurisdictionOpts
+		},
+		{
+			name: 'Demographic',
+			currentValue: $demographicOpts.find((d) => d.display === 'Population Density'),
+			opts: $demographicOpts
+		},
+		{
+			name: 'Station',
+			currentValue: $stationTypeOpts.find((d) => d.display === 'All'),
+			opts: $stationTypeOpts
+		},
+		{
+			name: 'Reform',
+			currentValue: $reformTypeOpts.find((d) => d.display === 'None'),
+			opts: $reformTypeOpts
+		}
 	];
 
 	const handleSelection = (name) => {
 		let thisControl = controls.find((d) => d.name === name);
 		let value = thisControl.currentValue;
-		if (name === 'jurisdiction') {
+		if (name === 'Jurisdiction') {
 			jurisdiction.set(value.JURISDICTION_ID);
-		} else if (name === 'demographic') {
+		} else if (name === 'Demographic') {
 			demographic.set(value.key);
-		} else if (name === 'station') {
+		} else if (name === 'Station') {
 			stationType.set(value.key);
-		} else if (name === 'reform') {
+		} else if (name === 'Reform') {
 			reformType.set(value.key);
 		}
 	};

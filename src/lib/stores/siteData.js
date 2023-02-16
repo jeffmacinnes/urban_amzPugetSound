@@ -27,7 +27,7 @@ const getGeo = async (jurisdictionID) => {
 export const jurisdictionOpts = readable(
 	jurisdictionData.map((d) => ({ display: d.NAME, JURISDICTION_ID: d.GISJOIN }))
 );
-export const jurisdiction = writable(null);
+export const jurisdiction = writable('G53063000'); // set the default here, and make sure it maps to what is set in Options.svelte
 
 export const demographic = writable(null);
 export const demographicOpts = readable([
@@ -37,11 +37,12 @@ export const demographicOpts = readable([
 
 export const stationType = writable(null);
 export const stationTypeOpts = readable(
-	[...new Set(stationData.map((d) => d.mode))].map((d) => ({ display: d, key: d }))
+	[...new Set(stationData.map((d) => d.mode)), 'All'].map((d) => ({ display: d, key: d }))
 );
 
 export const reformType = writable(null);
 export const reformTypeOpts = readable([
+	{ display: 'None', key: 'no_reforms' },
 	{ display: 'Baseline', key: 'baseline_under_zoning' },
 	{ display: 'Plexify', key: 'plexify_reform' },
 	{ display: 'Multiply', key: 'multiply_reform' },
@@ -75,6 +76,8 @@ export const geoData = derived(jurisdiction, ($jurisdiction, set) => {
 });
 
 // --- Define the data for each layer based on current options
+export const demographicLayerData = writable([]);
+
 // export const demographicLayerData = derived(
 // 	[jurisdiction, demographic],
 // 	([$jurisdiction, $demographic]) => {

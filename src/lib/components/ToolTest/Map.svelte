@@ -7,7 +7,13 @@
 	// import { GeoJsonLayer } from '@deck.gl/layers';
 
 	import { PUBLIC_MAPBOX_API_KEY } from '$env/static/public';
-	import { geoData, mapView } from '$stores/siteData';
+	import {
+		geoData,
+		mapView,
+		jurisdiction,
+		demographic,
+		demographicLayerData
+	} from '$stores/siteData';
 	import { initialViewState } from './js/toolUtils';
 
 	let map = null;
@@ -49,6 +55,8 @@
 		if (!map) return;
 		if (Object.keys($geoData).length === 0) return;
 
+		console.log('updating layers', layersArr);
+
 		// loop over each layer in layersArr and call the corresponding update fn
 		layersArr.forEach((layerName) => {
 			switch (layerName) {
@@ -62,49 +70,12 @@
 					console.log('Can not find a layer that matches ', layerName);
 			}
 		});
-
-		// // loop through all layers, and update
-		// layersArr.forEach((layerName) => {
-		// 	// remove the current version of this layer
-		// 	const id = `${layerName}-layer`;
-		// 	if (map.getLayer(id)) {
-		// 		map.removeLayer(id);
-		// 	}
-		// 	if (map.getSource(id)) {
-		// 		map.removeSource(id);
-		// 	}
-
-		// 	// create a new version of this layer and add to map
-		// 	const newLayer = getLayer(layerName);
-		// 	map.addControl(newLayer);
-		// });
-
-		// let newLayers = layersArr.map((name) => getLayer(name));
-
-		// newLayers.forEach((layer) => map.addControl(layer));
-
-		// const overlay = new MapboxOverlay({
-		// 	interleaved: false,
-		// 	layers: [
-		// 		new GeoJsonLayer({
-		// 			id: 'geojson-layer',
-		// 			data: $geoData.jurisdiction.features,
-		// 			pickable: false,
-		// 			stroked: true,
-		// 			filled: true,
-		// 			lineWidthScale: 20,
-		// 			lineWidthMinPixels: 2,
-		// 			getFillColor: [160, 160, 180, 200],
-		// 			getLineColor: [255, 0, 0, 200],
-		// 			getLineWidth: 1
-		// 		})
-		// 	]
-		// });
-		//map.addControl(overlay);
 	};
 
+	// map update triggers
 	$: $mapView, updateView();
-	$: $geoData, updateLayers(['jurisdiction']);
+	$: $geoData, updateLayers(['jurisdiction', 'demographic']);
+	$: $demographic, updateLayers(['demographic']);
 	$: console.log($geoData);
 </script>
 

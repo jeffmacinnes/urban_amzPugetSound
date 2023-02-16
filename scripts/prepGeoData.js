@@ -21,6 +21,7 @@ referenced and loaded (once the repo has been published to github)
 import fs from 'fs';
 import csv from 'csvtojson';
 import fastcsv from 'fast-csv';
+import stringHash from 'string-hash';
 
 const geoOutputDir = '../data/geo';
 const dataOutputDir = '../src/lib/data';
@@ -100,11 +101,9 @@ const prepStationFiles = async () => {
 	// load csv of station variables, assign unique ID to each station
 	let stationData = await csv().fromFile(`${inputDir}/stations_table_for_tool.csv`);
 	stationData = stationData.map((d, i) => ({
-		...d,
-		STATION_ID: `STATION${(i + 1).toString().padStart(3, '0')}`
+		STATION_ID: `S${stringHash(d.station_link)}`, // if this method changes, need to update prepData.js to match
+		...d
 	}));
-	const ws = fs.createWriteStream(`${dataOutputDir}/stationData.csv`);
-	fastcsv.write(stationData, { headers: true }).pipe(ws);
 
 	// --- STATION GEO FILES
 	fs.readdirSync(inputDir).forEach((file) => {
