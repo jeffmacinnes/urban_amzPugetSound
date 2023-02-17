@@ -47,7 +47,7 @@
 		}
 	};
 
-	$: console.log('here', $jurisdiction, $demographic, $stationType, $reformType);
+	$: console.log('currentOpts', $jurisdiction, $demographic, $stationType, $reformType);
 </script>
 
 <div class="controls-container">

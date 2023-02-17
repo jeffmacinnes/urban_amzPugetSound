@@ -2,18 +2,8 @@
 	import { onMount, onDestroy } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
 	import { updateJurisdictionLayer, updateDemographicLayer } from './js/layers';
-
-	// import { MapboxOverlay } from '@deck.gl/mapbox';
-	// import { GeoJsonLayer } from '@deck.gl/layers';
-
 	import { PUBLIC_MAPBOX_API_KEY } from '$env/static/public';
-	import {
-		geoData,
-		mapView,
-		jurisdiction,
-		demographic,
-		demographicLayerData
-	} from '$stores/siteData';
+	import { geoData, mapView, demographicLayerData } from '$stores/siteData';
 	import { initialViewState } from './js/toolUtils';
 
 	let map = null;
@@ -55,8 +45,6 @@
 		if (!map) return;
 		if (Object.keys($geoData).length === 0) return;
 
-		console.log('updating layers', layersArr);
-
 		// loop over each layer in layersArr and call the corresponding update fn
 		layersArr.forEach((layerName) => {
 			switch (layerName) {
@@ -75,7 +63,7 @@
 	// map update triggers
 	$: $mapView, updateView();
 	$: $geoData, updateLayers(['jurisdiction', 'demographic']);
-	$: $demographic, updateLayers(['demographic']);
+	$: $demographicLayerData, updateLayers(['demographic']);
 	$: console.log($geoData);
 </script>
 

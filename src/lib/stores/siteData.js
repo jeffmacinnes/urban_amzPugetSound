@@ -1,4 +1,6 @@
 import { writable, readable, derived } from 'svelte/store';
+import * as d3 from 'd3';
+
 import jurisdictionsCentroids from '$data/jurisdictionsCentroids.csv';
 import jurisdictionData from '$data/jurisdictionData.csv';
 import tractData from '$data/tractData.csv';
@@ -25,22 +27,15 @@ const getGeo = async (jurisdictionID) => {
 
 // --- Set up drop down options
 export const jurisdictionOpts = readable(
-	jurisdictionData.map((d) => ({ display: d.NAME, JURISDICTION_ID: d.GISJOIN }))
+	jurisdictionData.map((d) => ({ display: d.NAME, JURISDICTION_ID: d.JURISDICTION_ID }))
 );
-export const jurisdiction = writable('G53063000'); // set the default here, and make sure it maps to what is set in Options.svelte
-
-export const demographic = writable(null);
 export const demographicOpts = readable([
 	{ display: 'Population Density', key: 'Pop_density' },
 	{ display: 'Cost Burdended', key: 'Cost_burdened' }
 ]);
-
-export const stationType = writable(null);
 export const stationTypeOpts = readable(
 	[...new Set(stationData.map((d) => d.mode)), 'All'].map((d) => ({ display: d, key: d }))
 );
-
-export const reformType = writable(null);
 export const reformTypeOpts = readable([
 	{ display: 'None', key: 'no_reforms' },
 	{ display: 'Baseline', key: 'baseline_under_zoning' },
@@ -50,6 +45,12 @@ export const reformTypeOpts = readable([
 	{ display: 'Missing Middle', key: 'middle_reform' },
 	{ display: 'All', key: 'all_reforms' }
 ]);
+
+// defaults (make sure these line up with what is set in OPTIONS.svelte)
+export const jurisdiction = writable('G53063000'); // set the default here, and make sure it maps to what is set in Options.svelte
+export const demographic = writable('Pop_density');
+export const stationType = writable('All');
+export const reformType = writable('None');
 
 // --- Set up datasets for each "view" of map
 export const mapView = derived(jurisdiction, ($jurisdiction) => {
@@ -76,13 +77,58 @@ export const geoData = derived(jurisdiction, ($jurisdiction, set) => {
 });
 
 // --- Define the data for each layer based on current options
-export const demographicLayerData = writable([]);
+export const demographicLayerData = derived([geoData, demographic], ([$geoData, $demographic]) => {
+	if (!$geoData.tracts) return { data: [] };
+
+	// filter data to only include tracts within this jurisdiction
+	const currentTracts = $geoData.tracts.features.map((d) => d.properties.TRACT_ID);
+	let data = tractData
+		.filter((d) => currentTracts.includes(d.TRACT_ID))
+		.map((d) => ({
+			TRACT_ID: d.TRACT_ID,
+			value: +d[$demographic]
+		}));
+
+	// set up color scale for current selection
+	const colorScale = d3
+		.scaleSequential(d3.interpolateBlues)
+		.domain(d3.extent(tractData.map((d) => d[$demographic])));
+
+	// compute colors for each tract
+	data = data.map((d) => ({ ...d, color: colorScale(d.value) }));
+
+	// TO-DO: legend details...
+	return {
+		data,
+		colorScale
+	};
+});
 
 // export const demographicLayerData = derived(
 // 	[jurisdiction, demographic],
 // 	([$jurisdiction, $demographic]) => {
-// 		console.log('demo layer data', $demographic);
+// 		// filter data to only include tracts within this jurisdiction
+// 		let data = tractData
+// 			.filter((d) => d.JURISDICTION_ID === $jurisdiction)
+// 			.map((d) => ({
+// 				TRACT_ID: d.TRACT_ID,
+// 				value: +d[$demographic]
+// 			}));
 
-// 		return tractData;
+// 		// set up color scale for current selection
+// 		const colorScale = d3
+// 			.scaleLinear()
+// 			.domain(d3.extent(data.map((d) => d.value)))
+// 			.range(['#FFFFFF', '#023858'])
+// 			.interpolate(d3.interpolateLab);
+
+// 		// compute colors for each tract
+// 		data = data.map((d) => ({ ...d, color: colorScale(d.value) }));
+
+// 		// TO-DO: legend details...
+// 		return {
+// 			data,
+// 			colorScale
+// 		};
 // 	}
 // );

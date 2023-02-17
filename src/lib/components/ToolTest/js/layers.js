@@ -1,14 +1,11 @@
 import { get } from 'svelte/store';
 import { geoData, jurisdiction, demographic, demographicLayerData } from '$stores/siteData';
-import rawTractsData from '$data/tractData.csv';
 
 import { color } from '$data/variables.json';
 import chroma from 'chroma-js';
 
 import { MapboxOverlay } from '@deck.gl/mapbox';
 import { GeoJsonLayer } from '@deck.gl/layers';
-
-console.log('raw tracts', rawTractsData);
 
 const removeLayer = (map, id) => {
 	if (map.getLayer(id)) {
@@ -17,6 +14,18 @@ const removeLayer = (map, id) => {
 	if (map.getSource(id)) {
 		map.removeSource(id);
 	}
+};
+
+const getLabelsLayerID = (map) => {
+	// return the id of the layer containing labels
+	const layers = map.getStyle().layers;
+	console.log('layers', layers);
+	for (const layer of layers) {
+		if (layer.type === 'symbol') {
+			return layer.id;
+		}
+	}
+	return null;
 };
 
 export const updateJurisdictionLayer = (map) => {
@@ -52,21 +61,33 @@ export const updateDemographicLayer = (map) => {
 	removeLayer(map, id);
 
 	// --- Prep data for this layer
-	// get the set of geo IDs for the current tracts
-	let geo = get(geoData);
-	let tractIDs = geo.tracts.features.map((d) => d.properties.TRACT_ID);
+	let geo = get(geoData); // <- geojson for current tracts
+	let layerProps = get(demographicLayerData); // <- tract data (from csv)
 
-	// filter the raw tract csv to only include these current tracts
-	let demographicVar = get(demographic);
-	let data = rawTractsData
-		.filter((d) => tractIDs.includes(d.GISJOIN))
-		.map((d) => ({
-			id: d.GISJOIN,
-			value: +d[demographicVar]
-		}));
+	// add 'color' to each tract feature's properties object (in geo data)
+	let data = geo.tracts;
+	data.features = data.features.map((d) => {
+		const tractID = d.properties.TRACT_ID;
+		const match = layerProps.data.find((d) => d.TRACT_ID === tractID);
+		d.properties.color = match ? match.color : '#f00';
+		return d;
+	});
 
-	// update the demographic layer data store to reflect the current tracts and demographic variabl selected
-	demographicLayerData.set(data);
+	let labelLayerId = getLabelsLayerID(map);
 
-	console.log('demographic data', demographicVar, data);
+	map.addSource(id, {
+		type: 'geojson',
+		data
+	});
+	map.addLayer(
+		{
+			id,
+			source: id,
+			type: 'fill',
+			paint: {
+				'fill-color': ['get', 'color']
+			}
+		},
+		labelLayerId
+	);
 };
