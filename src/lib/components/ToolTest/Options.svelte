@@ -9,71 +9,59 @@
 		reformType,
 		reformTypeOpts
 	} from '$stores/siteData';
+	import Dropdown from './Dropdown.svelte';
 
-	let controls = [
-		{
-			name: 'Jurisdiction',
-			currentValue: $jurisdictionOpts.find((d) => d.display === 'Seattle'),
-			opts: $jurisdictionOpts
-		},
-		{
-			name: 'Demographic',
-			currentValue: $demographicOpts.find((d) => d.display === 'Population Density'),
-			opts: $demographicOpts
-		},
-		{
-			name: 'Station',
-			currentValue: $stationTypeOpts.find((d) => d.display === 'All'),
-			opts: $stationTypeOpts
-		},
-		{
-			name: 'Reform',
-			currentValue: $reformTypeOpts.find((d) => d.display === 'None'),
-			opts: $reformTypeOpts
-		}
-	];
-
-	const handleSelection = (name) => {
-		let thisControl = controls.find((d) => d.name === name);
-		let value = thisControl.currentValue;
-		if (name === 'Jurisdiction') {
-			jurisdiction.set(value.JURISDICTION_ID);
-		} else if (name === 'Demographic') {
-			demographic.set(value.key);
-		} else if (name === 'Station') {
-			stationType.set(value.key);
-		} else if (name === 'Reform') {
-			reformType.set(value.key);
+	const handleUpdate = (name, e) => {
+		let newValue = e.detail.value;
+		if (name === 'jurisdiction') {
+			jurisdiction.set(newValue);
+		} else if (name === 'demographic') {
+			demographic.set(newValue);
+		} else if (name === 'stationType') {
+			stationType.set(newValue);
+		} else if (name === 'reformType') {
+			reformType.set(newValue);
+		} else {
+			console.log('unrecognized dropdown name: ', name);
 		}
 	};
 
-	$: console.log('currentOpts', $jurisdiction, $demographic, $stationType, $reformType);
+	$: console.log('current options', $jurisdiction, $demographic, $stationType, $reformType);
 </script>
 
-<div class="controls-container">
-	<form>
-		{#each controls as control}
-			<select bind:value={control.currentValue} on:change={() => handleSelection(control.name)}>
-				<option value="" selected disabled>{control.name}</option>
-				{#each control.opts as opt}
-					<option value={opt}>
-						{opt.display}
-					</option>
-				{/each}
-			</select>
-		{/each}
-	</form>
+<div class="options-container">
+	<!-- JURISDICTION -->
+	<Dropdown
+		options={$jurisdictionOpts}
+		currentValue={$jurisdiction}
+		on:update={(e) => handleUpdate('jurisdiction', e)}
+	/>
+	<!-- DEMOGRAPHICS -->
+	<Dropdown
+		options={$demographicOpts}
+		currentValue={$demographic}
+		on:update={(e) => handleUpdate('demographic', e)}
+	/>
+	<!-- STATION TYPE -->
+	<Dropdown
+		options={$stationTypeOpts}
+		currentValue={$stationType}
+		on:update={(e) => handleUpdate('stationType', e)}
+	/>
+	<!-- REFORM TYPE -->
+	<Dropdown
+		options={$reformTypeOpts}
+		currentValue={$reformType}
+		on:update={(e) => handleUpdate('reformType', e)}
+	/>
 </div>
 
 <style lang="scss">
-	.controls-container {
+	.options-container {
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		width: 100%;
 		height: 40px;
-	}
-
-	select {
-		height: 20px;
 	}
 </style>

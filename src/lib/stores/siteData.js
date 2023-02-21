@@ -27,17 +27,16 @@ const getGeo = async (jurisdictionID) => {
 
 // --- Set up drop down options
 export const jurisdictionOpts = readable(
-	jurisdictionData.map((d) => ({ display: d.NAME, JURISDICTION_ID: d.JURISDICTION_ID }))
+	jurisdictionData.map((d) => ({ display: d.NAME, key: d.JURISDICTION_ID }))
 );
 export const demographicOpts = readable([
 	{ display: 'Population Density', key: 'Pop_density' },
 	{ display: 'Cost Burdended', key: 'Cost_burdened' }
 ]);
-export const stationTypeOpts = readable(
-	[...new Set(stationData.map((d) => d.mode)), 'All'].map((d) => ({ display: d, key: d }))
-);
+// export const stationTypeOpts = readable(
+// 	[...new Set(stationData.map((d) => d.mode)), 'All'].map((d) => ({ display: d, key: d }))
+// );
 export const reformTypeOpts = readable([
-	{ display: 'None', key: 'no_reforms' },
 	{ display: 'Baseline', key: 'baseline_under_zoning' },
 	{ display: 'Plexify', key: 'plexify_reform' },
 	{ display: 'Multiply', key: 'multiply_reform' },
@@ -46,11 +45,11 @@ export const reformTypeOpts = readable([
 	{ display: 'All', key: 'all_reforms' }
 ]);
 
-// defaults (make sure these line up with what is set in OPTIONS.svelte)
-export const jurisdiction = writable('G53063000'); // set the default here, and make sure it maps to what is set in Options.svelte
+// Set initial values (should be the "key" prop of desired value of corresponding opt)
+export const jurisdiction = writable('G53063960'); // SEATTLE -> writable('G53063000');
 export const demographic = writable('Pop_density');
 export const stationType = writable('All');
-export const reformType = writable('None');
+export const reformType = writable('baseline_under_zoning');
 
 // --- Set up datasets for each "view" of map
 export const mapView = derived(jurisdiction, ($jurisdiction) => {
@@ -62,6 +61,7 @@ export const mapView = derived(jurisdiction, ($jurisdiction) => {
 		lat,
 		lng,
 		pitch: 60,
+		bearing: -30,
 		zoom: 12
 	};
 });
@@ -73,10 +73,31 @@ export const geoData = derived(jurisdiction, ($jurisdiction, set) => {
 	if (!$jurisdiction) {
 		return;
 	}
+
+	// And reset stationType whenver the jurisdiction changes
+	stationType.set('All');
+
 	getGeo($jurisdiction).then((data) => set(data));
 });
 
+// --- Update stationType opts based on what's available in current jurisdiction
+export const stationTypeOpts = derived(geoData, ($geoData) => {
+	if (!$geoData.stations) return [{ display: 'All', key: 'All' }];
+
+	// get a list of all stations for current jurisdiction
+	const jurisdictionStations = $geoData.stations.features.map((d) => d.properties.STATION_ID);
+	let data = stationData.filter((d) => jurisdictionStations.includes(d.STATION_ID));
+
+	// set stationType options based on what types of stations are available in this jurisdiction
+	let opts = ['All', ...new Set(data.map((d) => d.mode))].map((d) => ({
+		display: d,
+		key: d
+	}));
+	return opts;
+});
+
 // --- Define the data for each layer based on current options
+// choropleth layer
 export const demographicLayerData = derived([geoData, demographic], ([$geoData, $demographic]) => {
 	if (!$geoData.tracts) return { data: [] };
 
@@ -104,31 +125,19 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 	};
 });
 
-// export const demographicLayerData = derived(
-// 	[jurisdiction, demographic],
-// 	([$jurisdiction, $demographic]) => {
-// 		// filter data to only include tracts within this jurisdiction
-// 		let data = tractData
-// 			.filter((d) => d.JURISDICTION_ID === $jurisdiction)
-// 			.map((d) => ({
-// 				TRACT_ID: d.TRACT_ID,
-// 				value: +d[$demographic]
-// 			}));
+// circles for station locations
+export const stationsLayerData = derived([geoData, stationType], ([$geoData, $stationType]) => {
+	if (!$geoData.stations) return { data: [] };
 
-// 		// set up color scale for current selection
-// 		const colorScale = d3
-// 			.scaleLinear()
-// 			.domain(d3.extent(data.map((d) => d.value)))
-// 			.range(['#FFFFFF', '#023858'])
-// 			.interpolate(d3.interpolateLab);
+	// filter data to ony include stations in this jurisdiction
+	const jurisdictionStations = $geoData.stations.features.map((d) => d.properties.STATION_ID);
+	let data = stationData.filter((d) => jurisdictionStations.includes(d.STATION_ID));
 
-// 		// compute colors for each tract
-// 		data = data.map((d) => ({ ...d, color: colorScale(d.value) }));
-
-// 		// TO-DO: legend details...
-// 		return {
-// 			data,
-// 			colorScale
-// 		};
-// 	}
-// );
+	// now filter data by the selected station type (if applicable)
+	if ($stationType !== 'All') {
+		data = data.filter((d) => d.mode === $stationType);
+	}
+	return {
+		data
+	};
+});

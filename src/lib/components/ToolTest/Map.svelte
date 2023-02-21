@@ -1,9 +1,21 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
-	import { updateJurisdictionLayer, updateDemographicLayer } from './js/layers';
+	import {
+		updateJurisdictionLayer,
+		updateDemographicLayer,
+		updateStationsLayer,
+		updateHousingLayer
+	} from './js/layers';
 	import { PUBLIC_MAPBOX_API_KEY } from '$env/static/public';
-	import { geoData, mapView, demographicLayerData } from '$stores/siteData';
+	import {
+		geoData,
+		mapView,
+		demographicLayerData,
+		stationsLayerData,
+		stationType,
+		reformType
+	} from '$stores/siteData';
 	import { initialViewState } from './js/toolUtils';
 
 	let map = null;
@@ -16,6 +28,7 @@
 		map = new mapboxgl.Map({
 			accessToken: PUBLIC_MAPBOX_API_KEY,
 			container: mapRef,
+			antialias: true,
 			interactive: true,
 			style: mapStyle,
 			center: [initialViewState.longitude, initialViewState.latitude],
@@ -31,11 +44,12 @@
 	const updateView = () => {
 		if (!map) return;
 		if (Object.keys($mapView).length === 0) return;
-		let { lng, lat, zoom, pitch } = $mapView;
+		let { lng, lat, zoom, pitch, bearing } = $mapView;
 		map.flyTo({
 			center: [lng, lat],
 			zoom,
 			pitch,
+			bearing,
 			speed: 0.5,
 			essential: true // this animation is considered essential with respect to prefers-reduced-motion
 		});
@@ -54,6 +68,12 @@
 				case 'demographic':
 					updateDemographicLayer(map);
 					break;
+				case 'stations':
+					updateStationsLayer(map);
+					break;
+				case 'housing':
+					updateHousingLayer(map);
+					break;
 				default:
 					console.log('Can not find a layer that matches ', layerName);
 			}
@@ -64,6 +84,8 @@
 	$: $mapView, updateView();
 	$: $geoData, updateLayers(['jurisdiction', 'demographic']);
 	$: $demographicLayerData, updateLayers(['demographic']);
+	$: $stationsLayerData, updateLayers(['stations', 'housing']);
+	$: $reformType, updateLayers(['housing']);
 	$: console.log($geoData);
 </script>
 
