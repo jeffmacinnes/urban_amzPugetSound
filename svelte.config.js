@@ -17,6 +17,10 @@ const config = {
 			pages: 'docs',
 			assets: 'docs'
 		}),
+		paths: {
+			// change below to your repo name
+			base: dev ? '' : '/urban_amzPugetSound'
+		},
 		alias: {
 			'$actions/*': './src/lib/actions/*',
 			'$assets/*': './src/lib/assets/*',
