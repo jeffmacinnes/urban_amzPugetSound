@@ -1,4 +1,6 @@
-import adapter from '@sveltejs/adapter-auto';
+// import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
+
 import autoprefixer from 'autoprefixer';
 import preprocess from 'svelte-preprocess';
 import dsv from '@rollup/plugin-dsv';
