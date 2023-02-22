@@ -5,6 +5,8 @@ import autoprefixer from 'autoprefixer';
 import preprocess from 'svelte-preprocess';
 import dsv from '@rollup/plugin-dsv';
 
+const dev = process.env.NODE_ENV !== 'production';
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	preprocess: preprocess({
