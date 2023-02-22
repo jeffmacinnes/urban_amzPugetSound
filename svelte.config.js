@@ -1,11 +1,9 @@
 // import adapter from '@sveltejs/adapter-auto';
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-netlify';
 
 import autoprefixer from 'autoprefixer';
 import preprocess from 'svelte-preprocess';
-import dsv from '@rollup/plugin-dsv';
-
-const dev = process.env.NODE_ENV !== 'production';
+// import dsv from '@rollup/plugin-dsv';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -15,14 +13,7 @@ const config = {
 		}
 	}),
 	kit: {
-		adapter: adapter({
-			pages: 'docs',
-			assets: 'docs'
-		}),
-		paths: {
-			// change below to your repo name
-			base: dev ? '' : '/urban_amzPugetSound'
-		},
+		adapter: adapter(),
 		alias: {
 			'$actions/*': './src/lib/actions/*',
 			'$assets/*': './src/lib/assets/*',
@@ -32,8 +23,8 @@ const config = {
 			'$styles/*': './src/lib/styles/*',
 			'$utils/*': './src/lib/utils/*'
 		}
-	},
-	plugins: [dsv()]
+	}
+	// plugins: [dsv()]
 };
 
 export default config;
