@@ -1,38 +1,44 @@
-# create-svelte
+# Urban Institute - Amazon Puget Sound Housing project
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## Data
 
-## Creating a project
+Original source data is in `data/raw/`.
 
-If you're seeing this, you've probably already done this step. Congrats!
+Original data is prepped/processed using scripts in `scripts/` dir.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+The processed geojson files get stored in `data/geo` and hosted via the github repo. The live site fetches these files as needed from github.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+The processed csv files get stored in `src/lib/data` where they can be ingested by the site.
+
+All data used locally by the site is found in `src/lib/data`
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+The site is built using Svelte. Project files are `src/` directory.
+
+To install dependencies:
+
+```bash
+npm i
+```
+
+To run the development server
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+## Deploy
 
-To create a production version of your app:
+The staging site is hosted via Netlify. Pushes to the `main` branch are setup to automatically trigger builds and deployment via Netlify.
 
-```bash
-npm run build
-```
+The staging site can be found at:
 
-You can preview the production build with `npm run preview`.
+### Env Variables
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+The uses a private tokens for services like Mapbox. All private tokens are stored in a local `.env` file in the root of the repository (see `.env.example` for how to structure it). **However, the `.env` file is NOT stored in the repository**.
+
+- When working locall: Make your own `.env` file, with the same variable as `.env.example`. Do not track this file in git.
+- To access env vars within Netlify deployment environment:
+  - Use Netlify CLI to link local repo to netlify (once Netlify has been set up to monitor this remote repo): `netlify link`
+  - Use Netlify CLI to import the .env file: `netlify env:import .env`

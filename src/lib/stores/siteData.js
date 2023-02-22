@@ -1,6 +1,5 @@
 import { writable, readable, derived } from 'svelte/store';
 import * as d3 from 'd3';
-
 import jurisdictionsCentroids from '$data/jurisdictionsCentroids.csv';
 import jurisdictionData from '$data/jurisdictionData.csv';
 import tractData from '$data/tractData.csv';
@@ -24,6 +23,9 @@ const getGeo = async (jurisdictionID) => {
 
 	return geo;
 };
+
+// --- API KEYS
+export const MAPBOX_API_KEY = writable('');
 
 // --- Set up drop down options
 export const jurisdictionOpts = readable(

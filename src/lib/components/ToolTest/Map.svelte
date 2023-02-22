@@ -7,8 +7,9 @@
 		updateStationsLayer,
 		updateHousingLayer
 	} from './js/layers';
-	import { PUBLIC_MAPBOX_API_KEY } from '$env/static/public';
+	// import { PUBLIC_MAPBOX_API_KEY } from '$env/static/public';
 	import {
+		MAPBOX_API_KEY,
 		geoData,
 		mapView,
 		demographicLayerData,
@@ -26,7 +27,7 @@
 	onMount(() => {
 		// setup mapbox
 		map = new mapboxgl.Map({
-			accessToken: PUBLIC_MAPBOX_API_KEY,
+			accessToken: $MAPBOX_API_KEY,
 			container: mapRef,
 			antialias: true,
 			interactive: true,
