@@ -11,7 +11,10 @@ const config = {
 		}
 	}),
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			pages: 'docs',
+			assets: 'docs'
+		}),
 		alias: {
 			'$actions/*': './src/lib/actions/*',
 			'$assets/*': './src/lib/assets/*',

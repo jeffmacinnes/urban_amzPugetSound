@@ -179,8 +179,6 @@ export const updateHousingLayer = (map) => {
 	let reformOpt = get(reformType);
 	let layerData = get(stationsLayerData);
 
-	console.log('reformOpt', reformOpt);
-
 	// add props for each station that make clear the baseline value, and how many additional the current reform option would add
 	let data = layerData.data.map((d) => {
 		let baseline = +d['baseline_under_zoning'];
@@ -211,11 +209,52 @@ export const updateHousingLayer = (map) => {
 
 			// add columns for each stations
 			data.forEach((d) => {
-				var geometry = new THREE.BoxGeometry(100, 100, d.baseline * 0.1);
-				let cube = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color: 0x660000 }));
-				cube = tb.Object3D({ obj: cube, units: 'meters' });
-				cube.setCoords(d.coords);
-				tb.add(cube);
+				// -- Parent Group
+				const group = new THREE.Group();
+				let scalar = 0.03;
+
+				// -- Baseline bar
+				let baselineH = d.baseline * scalar;
+				const baselineBar = new THREE.Mesh(
+					new THREE.BoxGeometry(100, 100, baselineH),
+					new THREE.MeshStandardMaterial({ color: '#696969', opacity: 1, roughness: 1 })
+				);
+				baselineBar.position.set(0, 0, 0);
+				group.add(baselineBar);
+
+				if (d.additional > 0) {
+					// --- Added houses Bar
+					const addedBarH = d.additional * scalar;
+					const addedBar = new THREE.Mesh(
+						new THREE.BoxGeometry(100, 100, addedBarH),
+						new THREE.MeshStandardMaterial({ color: '#FDC11B', opacity: 1, roughness: 1 })
+					);
+					let addedBarZ = 0.5 * (baselineH + addedBarH); // each bar is positioned based on origin at center of obj
+					addedBar.position.set(0, 0, addedBarZ);
+					group.add(addedBar);
+				}
+
+				// DEBUGGING
+				// let hA = 200;
+				// let hB = 800;
+				// const geometryA = new THREE.BoxGeometry(100, 100, hA);
+				// const geometryB = new THREE.BoxGeometry(100, 100, hB);
+				// const materialA = new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.9 });
+				// const materialB = new THREE.MeshBasicMaterial({ color: 0x00ffff, opacity: 0.9 });
+
+				// const cubeA = new THREE.Mesh(geometryA, materialA);
+				// cubeA.position.set(0, 0, 0);
+
+				// const cubeB = new THREE.Mesh(geometryB, materialB);
+				// cubeB.position.set(50, 50, 0.5 * hA + 0.5 * hB);
+
+				// const group = new THREE.Group();
+				// group.add(cubeA);
+				// group.add(cubeB);
+
+				let tower = tb.Object3D({ obj: group, units: 'meters', anchor: 'center' });
+				tower.setCoords(d.coords);
+				tb.add(tower);
 			});
 		},
 		render: function (gl, matrix) {

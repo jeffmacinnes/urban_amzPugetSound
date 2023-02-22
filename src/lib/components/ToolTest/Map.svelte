@@ -38,6 +38,11 @@
 		});
 		map.on('load', function () {
 			map.resize();
+
+			// DEBUGGING
+			console.log('mounted and loaded  ');
+			updateLayers(['jurisdiction', 'demographic', 'stations', 'housing']);
+			updateView();
 		});
 	});
 
@@ -58,6 +63,8 @@
 	const updateLayers = (layersArr) => {
 		if (!map) return;
 		if (Object.keys($geoData).length === 0) return;
+
+		console.log('updating layers: ', layersArr);
 
 		// loop over each layer in layersArr and call the corresponding update fn
 		layersArr.forEach((layerName) => {
