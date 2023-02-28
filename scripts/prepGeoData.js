@@ -194,7 +194,7 @@ const prepTransitLineFiles = () => {
 			'Light Rail',
 			'Commuter Rail'
 		];
-		data.features = data.features.filter((d) => validModes.includes(d.MODE));
+		data.features = data.features.filter((d) => validModes.includes(d.properties.MODE));
 
 		// write output file
 		const dst = `${geoOutputDir}/${jurisdictionID}_transitLines.geojson`;
