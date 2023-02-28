@@ -1,16 +1,33 @@
 /**
  * Do not edit directly
- * Generated on Tue, 13 Dec 2022 23:06:23 GMT
+ * Generated on Wed, 22 Feb 2023 23:44:02 GMT
  */
 
 :root {
   --color-black: #000000;
   --color-white: #ffffff;
-  --color-c1: #ee644d;
-  --color-c2: #97a62c;
-  --color-g1: #3c3c3c;
-  --color-g2: #737373;
-  --color-g3: #b7b7b7;
-  --color-g4: #dcdcdc;
-  --color-g5: #f4f4f4;
+  --color-blue: #1696d2;
+  --color-blue-darkest: #062635;
+  --color-blue-darker: #0a4c6a;
+  --color-blue-dark: #12719e;
+  --color-blue-medium: #46abdb;
+  --color-blue-light: #73bfe2;
+  --color-blue-lighter: #a2d4ec;
+  --color-blue-lightest: #cfe8f3;
+  --color-yellow: #fdbf11;
+  --color-yellow-darkest: #843215;
+  --color-yellow-darker: #ca5800;
+  --color-yellow-dark: #e88e2d;
+  --color-yellow-medium: #fccb41;
+  --color-yellow-light: #fdd870;
+  --color-yellow-lighter: #fce39e;
+  --color-yellow-lightest: #fff2cf;
+  --color-gray: #d2d2d2;
+  --color-gray-darkest: #353535;
+  --color-gray-darker: #696969;
+  --color-gray-dark: #9d9d9d;
+  --color-gray-medium: #dcdcdc;
+  --color-gray-light: #e3e3e3;
+  --color-gray-lighter: #ececec;
+  --color-gray-lightest: #f5f5f5;
 }

@@ -48,11 +48,27 @@ const prepJurisdictionCentroids = () => {
 
 	// save out just coords and jurisdiction ID as csv file
 	data = data.features.map((d) => {
+		const JURISDICTION_ID = d.properties.GISJOIN;
+		const name = d.properties.NAME;
+		let lat = d.geometry.coordinates[1]; // MAYBE BETTER TO USE d.properties.INTPTLAT/INTPTLON?
+		let lng = d.geometry.coordinates[0];
+
+		// need to manually adjust a couple of the centroids (usually due to plots of land outside main city)
+		if (JURISDICTION_ID === 'G53022640') {
+			// Everett
+			lat = 47.95811;
+			lng = -122.22029;
+		} else if (JURISDICTION_ID == 'G53035415') {
+			// Kent
+			lat = 47.39954;
+			lng = -122.21882;
+		}
+
 		return {
-			JURISDICTION_ID: d.properties.GISJOIN,
-			name: d.properties.NAME,
-			lat: d.geometry.coordinates[1], // MAYBE BETTER TO USE d.properties.INTPTLAT/INTPTLON
-			lng: d.geometry.coordinates[0]
+			JURISDICTION_ID,
+			name,
+			lat,
+			lng
 		};
 	});
 
@@ -141,9 +157,45 @@ const prepStationFiles = async () => {
 	});
 };
 
+const prepTransitLineFiles = () => {
+	console.log('...processing Transit Line Files...');
+	const inputDir = '../data/raw/transitLines';
+
+	// --- TRANIT LINE GEO FILES
+	fs.readdirSync(inputDir).forEach((file) => {
+		if (file.split('.').pop() !== 'geojson') {
+			return;
+		}
+		const raw = fs.readFileSync(`${inputDir}/${file}`);
+		let data = JSON.parse(raw);
+
+		// get the GISJOIN ID for this jurisdiction
+		const jurisdictionID = data.features[0].properties.GISJOIN;
+
+		// clean up features
+		data.features = data.features.map((d) => {
+			let properties = {
+				JURISDICTION_ID: d.properties['GISJOIN'],
+				MODE: d.properties['mode'],
+				STATUS: d.properties['status'],
+				NAME: d.properties['name']
+			};
+			return {
+				...d,
+				properties
+			};
+		});
+
+		// write output file
+		const dst = `${geoOutputDir}/${jurisdictionID}_transitLines.geojson`;
+		fs.writeFileSync(dst, JSON.stringify(data));
+	});
+};
+
 (async () => {
-	prepJurisdictionFiles();
+	// prepJurisdictionFiles();
 	prepJurisdictionCentroids();
-	prepTractFiles();
-	await prepStationFiles();
+	// prepTractFiles();
+	// await prepStationFiles();
+	// prepTransitLineFiles();
 })();

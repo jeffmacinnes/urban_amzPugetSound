@@ -23,11 +23,12 @@
 	let deck = null;
 	let mapRef;
 	let mapStyle = 'mapbox://styles/jeffmacinnes/cka6el67h0hng1imogwwb9mkc';
-
+	mapStyle = 'mapbox://styles/urbaninstitute/cl3dsnvc0000215mtxuo8rwwi';
 	onMount(() => {
 		// setup mapbox
 		map = new mapboxgl.Map({
-			accessToken: $MAPBOX_API_KEY,
+			// accessToken: $MAPBOX_API_KEY,
+			accessToken: 'pk.eyJ1IjoidXJiYW5pbnN0aXR1dGUiLCJhIjoiTEJUbmNDcyJ9.mbuZTy4hI_PWXw3C3UFbDQ',
 			container: mapRef,
 			antialias: true,
 			interactive: true,

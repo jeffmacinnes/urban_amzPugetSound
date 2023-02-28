@@ -42,3 +42,4 @@ The uses a private tokens for services like Mapbox. All private tokens are store
 - To access env vars within Netlify deployment environment:
   - Use Netlify CLI to link local repo to netlify (once Netlify has been set up to monitor this remote repo): `netlify link`
   - Use Netlify CLI to import the .env file: `netlify env:import .env`
+  - **This step must be repeated whenever you make changes to the `.env` file**
