@@ -1,5 +1,11 @@
 import { get } from 'svelte/store';
-import { geoData, demographicLayerData, stationsLayerData, reformType } from '$stores/siteData';
+import {
+	geoData,
+	demographicLayerData,
+	stationsLayerData,
+	stationType,
+	reformType
+} from '$stores/siteData';
 import circle from '@turf/circle';
 import union from '@turf/union';
 import { Threebox, THREE } from 'threebox-plugin';
@@ -24,13 +30,28 @@ const removeLayer = (map, id) => {
 const getLabelsLayerID = (map) => {
 	// return the id of the layer containing labels
 	const layers = map.getStyle().layers;
-	// console.log('layers', layers);
 	for (const layer of layers) {
 		if (layer.type === 'symbol') {
 			return layer.id;
 		}
 	}
 	return null;
+};
+
+// --- Set the layer order
+export const setLayerOrder = (map) => {
+	// Move demographic layer beneath roads layer
+	if (map.getLayer('demographic-layer')) {
+		map.moveLayer('demographic-layer', 'road-simple');
+	}
+
+	// Position all label layers on top
+	const layers = map.getStyle().layers;
+	layers
+		.filter((d) => d.type === 'symbol')
+		.forEach((layer) => {
+			map.moveLayer(layer.id); // <- without a 2nd arg, moveLayer will place the layer at the top
+		});
 };
 
 // -- OUTLINE AROUND CURRENT JURISDICTION --------------------------------------
@@ -100,6 +121,56 @@ export const updateDemographicLayer = (map) => {
 	);
 };
 
+// --- TRANSIT LINES -----------------------------------------
+export const updateTransitLinesLayer = (map) => {
+	// --- Prep data for this layer
+	let geo = get(geoData);
+	let currentStationType = get(stationType);
+
+	let data = JSON.parse(JSON.stringify(geo.transitLines)); // copy so we can mutate original
+
+	// filter the transit lines to match the current stationType
+	if (currentStationType !== 'All') {
+		data.features = data.features.filter((d) => d.properties.MODE === currentStationType);
+	}
+	console.log('now here', data);
+
+	// --- Add to map
+	// Add thick base line
+	let id = 'transit-lines-layer-1';
+	removeLayer(map, id);
+	map.addSource(id, {
+		type: 'geojson',
+		data
+	});
+	map.addLayer({
+		id,
+		source: id,
+		type: 'line',
+		paint: {
+			'line-color': '#000000',
+			'line-width': 8
+		}
+	});
+
+	// Add 2nd lighter line on top
+	id = 'transit-lines-layer-2';
+	removeLayer(map, id);
+	map.addSource(id, {
+		type: 'geojson',
+		data
+	});
+	map.addLayer({
+		id,
+		source: id,
+		type: 'line',
+		paint: {
+			'line-color': color.yellow,
+			'line-width': 2
+		}
+	});
+};
+
 // --- STATION LOCATIONS --------------------------------------
 export const updateStationsLayer = (map) => {
 	// --- Prep data for this layer
@@ -154,23 +225,23 @@ export const updateStationsLayer = (map) => {
 	data.features = [combined];
 
 	// --- Add station areas to map
-	let labelLayerId = getLabelsLayerID(map);
-	map.addSource(id, {
-		type: 'geojson',
-		data
-	});
-	map.addLayer(
-		{
-			id,
-			source: id,
-			type: 'fill',
-			paint: {
-				'fill-color': 'rgba(255,255,0,.3)'
-				// 'fill-outline-color': '#000'
-			}
-		},
-		labelLayerId
-	);
+	// let labelLayerId = getLabelsLayerID(map);
+	// map.addSource(id, {
+	// 	type: 'geojson',
+	// 	data
+	// });
+	// map.addLayer(
+	// 	{
+	// 		id,
+	// 		source: id,
+	// 		type: 'fill',
+	// 		paint: {
+	// 			'fill-color': 'rgba(255,255,0,.3)'
+	// 			// 'fill-outline-color': '#000'
+	// 		}
+	// 	},
+	// 	labelLayerId
+	// );
 };
 
 // --- 3D BARS FOR HOUSING LAYER --------------------------------------
@@ -217,7 +288,7 @@ export const updateHousingLayer = (map) => {
 				let baselineH = d.baseline * scalar;
 				const baselineBar = new THREE.Mesh(
 					new THREE.BoxGeometry(100, 100, baselineH),
-					new THREE.MeshStandardMaterial({ color: '#696969', opacity: 1, roughness: 1 })
+					new THREE.MeshStandardMaterial({ color: color['gray-darker'], opacity: 1, roughness: 1 })
 				);
 				baselineBar.position.set(0, 0, 0);
 				group.add(baselineBar);
@@ -227,30 +298,12 @@ export const updateHousingLayer = (map) => {
 					const addedBarH = d.additional * scalar;
 					const addedBar = new THREE.Mesh(
 						new THREE.BoxGeometry(100, 100, addedBarH),
-						new THREE.MeshStandardMaterial({ color: '#FDC11B', opacity: 1, roughness: 1 })
+						new THREE.MeshStandardMaterial({ color: color.yellow, opacity: 1, roughness: 1 })
 					);
 					let addedBarZ = 0.5 * (baselineH + addedBarH); // each bar is positioned based on origin at center of obj
 					addedBar.position.set(0, 0, addedBarZ);
 					group.add(addedBar);
 				}
-
-				// DEBUGGING
-				// let hA = 200;
-				// let hB = 800;
-				// const geometryA = new THREE.BoxGeometry(100, 100, hA);
-				// const geometryB = new THREE.BoxGeometry(100, 100, hB);
-				// const materialA = new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.9 });
-				// const materialB = new THREE.MeshBasicMaterial({ color: 0x00ffff, opacity: 0.9 });
-
-				// const cubeA = new THREE.Mesh(geometryA, materialA);
-				// cubeA.position.set(0, 0, 0);
-
-				// const cubeB = new THREE.Mesh(geometryB, materialB);
-				// cubeB.position.set(50, 50, 0.5 * hA + 0.5 * hB);
-
-				// const group = new THREE.Group();
-				// group.add(cubeA);
-				// group.add(cubeB);
 
 				let tower = tb.Object3D({ obj: group, units: 'meters', anchor: 'center' });
 				tower.setCoords(d.coords);
@@ -261,6 +314,4 @@ export const updateHousingLayer = (map) => {
 			tb.update(); //update Threebox scene
 		}
 	});
-
-	console.log('housing data', data);
 };

@@ -4,10 +4,12 @@
 	import {
 		updateJurisdictionLayer,
 		updateDemographicLayer,
+		updateTransitLinesLayer,
 		updateStationsLayer,
-		updateHousingLayer
+		updateHousingLayer,
+		setLayerOrder
 	} from './js/layers';
-	// import { PUBLIC_MAPBOX_API_KEY } from '$env/static/public';
+
 	import {
 		MAPBOX_API_KEY,
 		geoData,
@@ -22,13 +24,11 @@
 	let map = null;
 	let deck = null;
 	let mapRef;
-	let mapStyle = 'mapbox://styles/jeffmacinnes/cka6el67h0hng1imogwwb9mkc';
-	mapStyle = 'mapbox://styles/urbaninstitute/cl3dsnvc0000215mtxuo8rwwi';
+	let mapStyle = 'mapbox://styles/urbaninstitute/cleoryx1x000101my2y9cr08m';
 	onMount(() => {
 		// setup mapbox
 		map = new mapboxgl.Map({
-			// accessToken: $MAPBOX_API_KEY,
-			accessToken: 'pk.eyJ1IjoidXJiYW5pbnN0aXR1dGUiLCJhIjoiTEJUbmNDcyJ9.mbuZTy4hI_PWXw3C3UFbDQ',
+			accessToken: $MAPBOX_API_KEY,
 			container: mapRef,
 			antialias: true,
 			interactive: true,
@@ -42,8 +42,7 @@
 			map.resize();
 
 			// DEBUGGING
-			console.log('mounted and loaded  ');
-			updateLayers(['jurisdiction', 'demographic', 'stations', 'housing']);
+			updateLayers(['jurisdiction', 'demographic', 'transitLines', 'stations', 'housing']);
 			updateView();
 		});
 	});
@@ -77,6 +76,9 @@
 				case 'demographic':
 					updateDemographicLayer(map);
 					break;
+				case 'transitLines':
+					updateTransitLinesLayer(map);
+					break;
 				case 'stations':
 					updateStationsLayer(map);
 					break;
@@ -87,13 +89,14 @@
 					console.log('Can not find a layer that matches ', layerName);
 			}
 		});
+		setLayerOrder(map);
 	};
 
 	// map update triggers
 	$: $mapView, updateView();
 	$: $geoData, updateLayers(['jurisdiction', 'demographic']);
 	$: $demographicLayerData, updateLayers(['demographic']);
-	$: $stationsLayerData, updateLayers(['stations', 'housing']);
+	$: $stationsLayerData, updateLayers(['transitLines', 'stations', 'housing']);
 	$: $reformType, updateLayers(['housing']);
 	$: console.log($geoData);
 </script>

@@ -11,15 +11,26 @@ const getGeo = async (jurisdictionID) => {
 	let geo = {};
 	let resp;
 
-	// fetch the 3 different geo files for this jurisdiction
-	resp = await fetch(`${baseURL}/${jurisdictionID}_jurisdiction.geojson`);
-	geo['jurisdiction'] = await resp.json();
+	// fetch the 4 different geo files for this jurisdiction
+	const geoTypes = ['jurisdiction', 'tracts', 'stations', 'transitLines'];
+	for (const geoType of geoTypes) {
+		try {
+			resp = await fetch(`${baseURL}/${jurisdictionID}_${geoType}.geojson`);
+			geo[geoType] = await resp.json();
+		} catch {
+			console.log(`Error downloading ${geoType} geoData for ${jurisdictionID}`);
+			geo[geoType] = { type: 'FeatureCollection', features: [] };
+		}
+	}
 
-	resp = await fetch(`${baseURL}/${jurisdictionID}_tracts.geojson`);
-	geo['tracts'] = await resp.json();
+	// resp = await fetch(`${baseURL}/${jurisdictionID}_jurisdiction.geojson`);
+	// geo['jurisdiction'] = await resp.json();
 
-	resp = await fetch(`${baseURL}/${jurisdictionID}_stations.geojson`);
-	geo['stations'] = await resp.json();
+	// resp = await fetch(`${baseURL}/${jurisdictionID}_tracts.geojson`);
+	// geo['tracts'] = await resp.json();
+
+	// resp = await fetch(`${baseURL}/${jurisdictionID}_stations.geojson`);
+	// geo['stations'] = await resp.json();
 
 	return geo;
 };
@@ -114,7 +125,7 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 
 	// set up color scale for current selection
 	const colorScale = d3
-		.scaleSequential(d3.interpolateBlues)
+		.scaleSequential(['#ffffff', '#1273a1'])
 		.domain(d3.extent(tractData.map((d) => d[$demographic])));
 
 	// compute colors for each tract

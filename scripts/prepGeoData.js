@@ -186,6 +186,16 @@ const prepTransitLineFiles = () => {
 			};
 		});
 
+		// filter out any transit lines that aren't present in the stations data
+		const validModes = [
+			'Bus Rapid Transit',
+			'Arterial Rapid Transit',
+			'Streetcar',
+			'Light Rail',
+			'Commuter Rail'
+		];
+		data.features = data.features.filter((d) => validModes.includes(d.MODE));
+
 		// write output file
 		const dst = `${geoOutputDir}/${jurisdictionID}_transitLines.geojson`;
 		fs.writeFileSync(dst, JSON.stringify(data));
@@ -194,8 +204,8 @@ const prepTransitLineFiles = () => {
 
 (async () => {
 	// prepJurisdictionFiles();
-	prepJurisdictionCentroids();
+	// prepJurisdictionCentroids();
 	// prepTractFiles();
 	// await prepStationFiles();
-	// prepTransitLineFiles();
+	prepTransitLineFiles();
 })();
