@@ -4,6 +4,7 @@ import {
 	demographicLayerData,
 	stationsLayerData,
 	stationType,
+	stationTypeOpts,
 	reformType
 } from '$stores/siteData';
 import circle from '@turf/circle';
@@ -45,13 +46,21 @@ export const setLayerOrder = (map) => {
 		map.moveLayer('demographic-layer', 'road-simple');
 	}
 
-	// Position all label layers on top
+	// Position the labels at top, above station and transit lines
 	const layers = map.getStyle().layers;
 	layers
 		.filter((d) => d.type === 'symbol')
 		.forEach((layer) => {
 			map.moveLayer(layer.id); // <- without a 2nd arg, moveLayer will place the layer at the top
 		});
+
+	// Now put housing 3D columns above those labels
+	if (map.getLayer('housing-layer')) {
+		map.moveLayer('housing-layer');
+	}
+
+	// Lastly, set the city label on top of everything so it doesn't get obscured
+	map.moveLayer('settlement-major-label');
 };
 
 // -- OUTLINE AROUND CURRENT JURISDICTION --------------------------------------
@@ -132,8 +141,11 @@ export const updateTransitLinesLayer = (map) => {
 	// filter the transit lines to match the current stationType
 	if (currentStationType !== 'All') {
 		data.features = data.features.filter((d) => d.properties.MODE === currentStationType);
+	} else {
+		let currentStationTypeOpts = get(stationTypeOpts);
+		let validOpts = currentStationTypeOpts.map((d) => d.display);
+		data.features = data.features.filter((d) => validOpts.includes(d.properties.MODE));
 	}
-	console.log('now here', data);
 
 	// --- Add to map
 	// Add thick base line
@@ -183,31 +195,31 @@ export const updateStationsLayer = (map) => {
 	data.features = data.features.filter((d) => stationIDs.includes(d.properties.STATION_ID));
 
 	// --- Circles showing each stations location
-	let id = `stations-layer`;
-	removeLayer(map, id);
+	// let id = `stations-layer`;
+	// removeLayer(map, id);
 
-	// add to map
-	map.addSource(id, {
-		type: 'geojson',
-		data
-	});
-	map.addLayer({
-		id,
-		source: id,
-		type: 'circle',
-		paint: {
-			'circle-color': '#000',
-			'circle-radius': 7,
-			'circle-pitch-alignment': 'map'
-		}
-	});
+	// // add to map
+	// map.addSource(id, {
+	// 	type: 'geojson',
+	// 	data
+	// });
+	// map.addLayer({
+	// 	id,
+	// 	source: id,
+	// 	type: 'circle',
+	// 	paint: {
+	// 		'circle-color': '#000',
+	// 		'circle-radius': 7,
+	// 		'circle-pitch-alignment': 'map'
+	// 	}
+	// });
 
 	// -- AREA AROUND STATION
-	id = `stations-area-layer`;
+	let id = `stations-area-layer`;
 	removeLayer(map, id);
 
 	// create a "area" circle around each station
-	let radius = 0.5; // half mile radius around each station
+	let radius = 0.06; // half mile radius around each station
 	let circles = data.features.map((d) => {
 		let center = d.geometry.coordinates;
 		return circle(center, radius, {
@@ -225,23 +237,23 @@ export const updateStationsLayer = (map) => {
 	data.features = [combined];
 
 	// --- Add station areas to map
-	// let labelLayerId = getLabelsLayerID(map);
-	// map.addSource(id, {
-	// 	type: 'geojson',
-	// 	data
-	// });
-	// map.addLayer(
-	// 	{
-	// 		id,
-	// 		source: id,
-	// 		type: 'fill',
-	// 		paint: {
-	// 			'fill-color': 'rgba(255,255,0,.3)'
-	// 			// 'fill-outline-color': '#000'
-	// 		}
-	// 	},
-	// 	labelLayerId
-	// );
+	let labelLayerId = getLabelsLayerID(map);
+	map.addSource(id, {
+		type: 'geojson',
+		data
+	});
+	map.addLayer(
+		{
+			id,
+			source: id,
+			type: 'fill',
+			paint: {
+				'fill-color': '#000'
+				// 'fill-outline-color': '#f00'
+			}
+		},
+		labelLayerId
+	);
 };
 
 // --- 3D BARS FOR HOUSING LAYER --------------------------------------
@@ -285,10 +297,16 @@ export const updateHousingLayer = (map) => {
 				let scalar = 0.03;
 
 				// -- Baseline bar
+				const opacity = 0.65;
 				let baselineH = d.baseline * scalar;
 				const baselineBar = new THREE.Mesh(
 					new THREE.BoxGeometry(100, 100, baselineH),
-					new THREE.MeshStandardMaterial({ color: color['gray-darker'], opacity: 1, roughness: 1 })
+					new THREE.MeshPhongMaterial({
+						color: color['gray-darker'],
+						opacity,
+						transparent: true,
+						side: THREE.DoubleSide
+					})
 				);
 				baselineBar.position.set(0, 0, 0);
 				group.add(baselineBar);
@@ -298,12 +316,20 @@ export const updateHousingLayer = (map) => {
 					const addedBarH = d.additional * scalar;
 					const addedBar = new THREE.Mesh(
 						new THREE.BoxGeometry(100, 100, addedBarH),
-						new THREE.MeshStandardMaterial({ color: color.yellow, opacity: 1, roughness: 1 })
+						new THREE.MeshPhongMaterial({
+							color: color.yellow,
+							opacity,
+							transparent: true,
+							side: THREE.DoubleSide
+						})
 					);
 					let addedBarZ = 0.5 * (baselineH + addedBarH); // each bar is positioned based on origin at center of obj
 					addedBar.position.set(0, 0, addedBarZ);
 					group.add(addedBar);
 				}
+
+				// lift up
+				group.position.set(0, 0, -50);
 
 				let tower = tb.Object3D({ obj: group, units: 'meters', anchor: 'center' });
 				tower.setCoords(d.coords);

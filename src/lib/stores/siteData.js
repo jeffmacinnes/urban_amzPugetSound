@@ -23,15 +23,6 @@ const getGeo = async (jurisdictionID) => {
 		}
 	}
 
-	// resp = await fetch(`${baseURL}/${jurisdictionID}_jurisdiction.geojson`);
-	// geo['jurisdiction'] = await resp.json();
-
-	// resp = await fetch(`${baseURL}/${jurisdictionID}_tracts.geojson`);
-	// geo['tracts'] = await resp.json();
-
-	// resp = await fetch(`${baseURL}/${jurisdictionID}_stations.geojson`);
-	// geo['stations'] = await resp.json();
-
 	return geo;
 };
 
@@ -43,7 +34,7 @@ export const jurisdictionOpts = readable(
 	jurisdictionData.map((d) => ({ display: d.NAME, key: d.JURISDICTION_ID }))
 );
 export const demographicOpts = readable([
-	{ display: 'Population Density', key: 'Pop_density' },
+	{ display: 'Population', key: 'Pop' },
 	{ display: 'Cost Burdended', key: 'Cost_burdened' }
 ]);
 // export const stationTypeOpts = readable(
@@ -60,7 +51,7 @@ export const reformTypeOpts = readable([
 
 // Set initial values (should be the "key" prop of desired value of corresponding opt)
 export const jurisdiction = writable('G53063960'); // SEATTLE -> writable('G53063000');
-export const demographic = writable('Pop_density');
+export const demographic = writable('Pop');
 export const stationType = writable('All');
 export const reformType = writable('baseline_under_zoning');
 
@@ -125,8 +116,8 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 
 	// set up color scale for current selection
 	const colorScale = d3
-		.scaleSequential(['#ffffff', '#1273a1'])
-		.domain(d3.extent(tractData.map((d) => d[$demographic])));
+		.scaleSequential(['#e4f3f7', '#1273a1']) // ['#a2d4ec', '#73bfe2', '#1695d0', '#1273a1', '#062837']
+		.domain(d3.extent(tractData.map((d) => +d[$demographic])));
 
 	// compute colors for each tract
 	data = data.map((d) => ({ ...d, color: colorScale(d.value) }));

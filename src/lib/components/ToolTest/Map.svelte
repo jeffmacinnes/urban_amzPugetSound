@@ -22,6 +22,7 @@
 	import { initialViewState } from './js/toolUtils';
 
 	let map = null;
+	let mapLoaded = false;
 	let deck = null;
 	let mapRef;
 	let mapStyle = 'mapbox://styles/urbaninstitute/cleoryx1x000101my2y9cr08m';
@@ -40,6 +41,7 @@
 		});
 		map.on('load', function () {
 			map.resize();
+			mapLoaded = true;
 
 			// DEBUGGING
 			updateLayers(['jurisdiction', 'demographic', 'transitLines', 'stations', 'housing']);
@@ -49,6 +51,7 @@
 
 	const updateView = () => {
 		if (!map) return;
+		if (!mapLoaded) return;
 		if (Object.keys($mapView).length === 0) return;
 		let { lng, lat, zoom, pitch, bearing } = $mapView;
 		map.flyTo({
@@ -63,6 +66,7 @@
 
 	const updateLayers = (layersArr) => {
 		if (!map) return;
+		if (!mapLoaded) return;
 		if (Object.keys($geoData).length === 0) return;
 
 		console.log('updating layers: ', layersArr);
