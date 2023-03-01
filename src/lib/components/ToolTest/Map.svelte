@@ -28,6 +28,7 @@
 	let mapStyle = 'mapbox://styles/urbaninstitute/cleoryx1x000101my2y9cr08m';
 	onMount(() => {
 		// setup mapbox
+		console.log('mapbox token', $MAPBOX_API_KEY);
 		map = new mapboxgl.Map({
 			accessToken: $MAPBOX_API_KEY,
 			container: mapRef,

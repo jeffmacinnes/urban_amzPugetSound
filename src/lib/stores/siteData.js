@@ -34,9 +34,23 @@ export const jurisdictionOpts = readable(
 	jurisdictionData.map((d) => ({ display: d.NAME, key: d.JURISDICTION_ID }))
 );
 export const demographicOpts = readable([
-	{ display: 'Population', key: 'Pop' },
-	{ display: 'Cost Burdended', key: 'Cost_burdened' }
+	{ display: 'Housing Value', key: 'Med_housing_value' },
+	{ display: '# Building Permits', key: 'Permits' },
+	{ display: 'Subsidized Housing Share', key: 'Subsidized_hsg_share' },
+	{ display: 'Cost Burdended', key: 'Cost_burdened' },
+	{ display: 'Population Density', key: 'Pop_density' },
+	{ display: 'Household Income', key: 'Med_HH_inc' },
+	{ display: 'Share of White Households', key: 'White_non_hisp' },
+	{ display: 'Share of Black Housholds', key: 'Black_non_hisp' },
+	{ display: 'Share of Latino/a Households', key: 'Hispanic' },
+	{ display: 'Share of Asian Households', key: 'Asian_non_hisp' },
+	{ display: 'Job Density', key: 'Job_density' },
+	{ display: 'Share of Transit Commuters', key: 'Transit_to_work' },
+	{ display: 'Share of Bike Commuters', key: 'Bike_to_work' },
+	{ display: 'Share of Walking Commuters', key: 'Walk_to_Work' },
+	{ display: 'Share of Green Commuters', key: 'Green_commute_share' }
 ]);
+
 // export const stationTypeOpts = readable(
 // 	[...new Set(stationData.map((d) => d.mode)), 'All'].map((d) => ({ display: d, key: d }))
 // );
@@ -51,7 +65,7 @@ export const reformTypeOpts = readable([
 
 // Set initial values (should be the "key" prop of desired value of corresponding opt)
 export const jurisdiction = writable('G53063960'); // SEATTLE -> writable('G53063000');
-export const demographic = writable('Pop');
+export const demographic = writable('Pop_density');
 export const stationType = writable('All');
 export const reformType = writable('baseline_under_zoning');
 
@@ -115,9 +129,15 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 		}));
 
 	// set up color scale for current selection
+	const colors = ['#c6eaff', '#75b4dd', '#2d7fac', '#0a4c6a'];
 	const colorScale = d3
-		.scaleSequential(['#e4f3f7', '#1273a1']) // ['#a2d4ec', '#73bfe2', '#1695d0', '#1273a1', '#062837']
-		.domain(d3.extent(tractData.map((d) => +d[$demographic])));
+		.scaleQuantile()
+		.domain(tractData.map((d) => +d[$demographic])) // pass the whole dataset to a scaleQuantile’s domain
+		.range(colors);
+	// const colorScale = d3
+	// 	.scaleQuantize()
+	// 	.domain(d3.extent(tractData.map((d) => +d[$demographic]))) // pass the whole dataset to a scaleQuantile’s domain
+	// 	.range(colors);
 
 	// compute colors for each tract
 	data = data.map((d) => ({ ...d, color: colorScale(d.value) }));
