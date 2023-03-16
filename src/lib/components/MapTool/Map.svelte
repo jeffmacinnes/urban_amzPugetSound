@@ -28,12 +28,13 @@
 	let mapStyle = 'mapbox://styles/urbaninstitute/cleoryx1x000101my2y9cr08m';
 	onMount(() => {
 		// setup mapbox
-		console.log('mapbox token', $MAPBOX_API_KEY);
 		map = new mapboxgl.Map({
 			accessToken: $MAPBOX_API_KEY,
 			container: mapRef,
 			antialias: true,
-			interactive: true,
+			dragPan: true,
+			dragRotate: false,
+			scrollZoom: false,
 			style: mapStyle,
 			center: [initialViewState.longitude, initialViewState.latitude],
 			zoom: initialViewState.zoom,
@@ -43,11 +44,11 @@
 		map.on('load', function () {
 			map.resize();
 			mapLoaded = true;
-
-			// DEBUGGING
 			updateLayers(['jurisdiction', 'demographic', 'transitLines', 'stations', 'housing']);
 			updateView();
 		});
+
+		map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'bottom-right');
 	});
 
 	const updateView = () => {
@@ -103,7 +104,7 @@
 	$: $demographicLayerData, updateLayers(['demographic']);
 	$: $stationsLayerData, updateLayers(['transitLines', 'stations', 'housing']);
 	$: $reformType, updateLayers(['housing']);
-	$: console.log($geoData);
+	// $: console.log($geoData);
 </script>
 
 <div class="map-container">

@@ -1,63 +1,26 @@
 @import 'variables.css';
 @import 'font.css';
 @import 'mapbox-gl/dist/mapbox-gl.css';
+@import 'urban.css';
 
-/* colors defined in variables.css */
-
-:root {
-	/* Defaults, ignore this section */
-	/* vars */
-	--sans: 'Inter', sans-serif;
-	--serif: Georgia, Times, serif;
-	--mono: 'Courier New', monospace;
-
-	/* custom presets */
-	--border-radius: 4px;
-	--font-body: var(--sans);
-	--font-form: var(--serif);
-	--color-bg: var(--color-white);
-	--shadow-std: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	--shadow-color: -8px 8px 0px var(--color-c1);
-	--shadow-white: -8px 8px 0px var(--color-white);
-}
+/* colors defined in variables.css, which gets created by style-dictionary */
 
 /* Site specific  */
-
-html {
-	font-size: 12px;
-	font-weight: 300;
-	color: var(--color-g1);
-	line-height: 100%;
-}
-
 body {
 	background: var(--color-white);
-	font-family: 'Inter', sans-serif;
-	font-style: normal;
-	font-size: 1.6rem;
-	color: var(--color-g1);
-	letter-spacing: 0.005em;
-	box-sizing: border-box;
-	/* overflow-x: hidden; */
 }
 
 html,
 body {
 	margin: 0;
 	box-sizing: border-box;
+	overflow-x: hidden;
 }
 
 *,
 *:before,
 *:after {
 	box-sizing: inherit;
-}
-
-h1 {
-	font-weight: 700;
-	font-size: 6rem;
-	letter-spacing: -0.065em;
-	line-height: 1;
 }
 
 .col-12 {

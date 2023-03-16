@@ -1,6 +1,8 @@
 import fs from 'fs';
 import archieml from 'archieml';
 import fetch from 'node-fetch';
+import { csvParse } from 'd3-dsv';
+import { autoType } from 'd3';
 
 const CWD = process.cwd();
 
@@ -8,6 +10,11 @@ const docs = [
 	{
 		id: '1aUdY-2B1StKNpTJkRcn9ahiOjSQnUbP-oDkYXs8OKP0',
 		filepath: '../src/lib/data/siteCopy.json'
+	},
+	{
+		id: '1hKKKGBlhopelncH4sze2Dwrh8shhPAwjkJzZU5BFY-8',
+		gid: '0',
+		filepath: '../src/lib/data/scrollyLocations.json'
 	}
 ];
 
@@ -24,7 +31,11 @@ const fetchGoogle = async ({ id, gid }) => {
 		const response = await fetch(url);
 		const text = await response.text();
 
-		if (gid) return text;
+		if (gid) {
+			// parse sheet data as JSON
+			let data = csvParse(text, autoType);
+			return JSON.stringify(data, null, 2);
+		}
 
 		const parsed = archieml.load(text);
 		const str = JSON.stringify(parsed);

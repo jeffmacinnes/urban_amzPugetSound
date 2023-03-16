@@ -161,45 +161,77 @@ const prepTransitLineFiles = () => {
 	console.log('...processing Transit Line Files...');
 	const inputDir = '../data/raw/transitLines';
 
-	// --- TRANIT LINE GEO FILES
-	fs.readdirSync(inputDir).forEach((file) => {
-		if (file.split('.').pop() !== 'geojson') {
-			return;
-		}
-		const raw = fs.readFileSync(`${inputDir}/${file}`);
-		let data = JSON.parse(raw);
+	// -- SPLITTING THE TRANSIT LINES BY JURISDICTION (OUTDATED)
+	// // --- TRANIT LINE GEO FILES
+	// fs.readdirSync(inputDir).forEach((file) => {
+	// 	if (file.split('.').pop() !== 'geojson') return;
+	// 	if (file.split('.')[0] === 'allTransit') return;
 
-		// get the GISJOIN ID for this jurisdiction
-		const jurisdictionID = data.features[0].properties.GISJOIN;
+	// 	const raw = fs.readFileSync(`${inputDir}/${file}`);
+	// 	let data = JSON.parse(raw);
 
-		// clean up features
-		data.features = data.features.map((d) => {
-			let properties = {
-				JURISDICTION_ID: d.properties['GISJOIN'],
-				MODE: d.properties['mode'],
-				STATUS: d.properties['status'],
-				NAME: d.properties['name']
-			};
-			return {
-				...d,
-				properties
-			};
-		});
+	// 	// get the GISJOIN ID for this jurisdiction
+	// 	const jurisdictionID = data.features[0].properties.GISJOIN;
 
-		// filter out any transit lines that aren't present in the stations data
-		const validModes = [
-			'Bus Rapid Transit',
-			'Arterial Rapid Transit',
-			'Streetcar',
-			'Light Rail',
-			'Commuter Rail'
-		];
-		data.features = data.features.filter((d) => validModes.includes(d.properties.MODE));
+	// 	// clean up features
+	// 	data.features = data.features.map((d) => {
+	// 		let properties = {
+	// 			JURISDICTION_ID: d.properties['GISJOIN'],
+	// 			MODE: d.properties['mode'],
+	// 			STATUS: d.properties['status'],
+	// 			NAME: d.properties['name']
+	// 		};
+	// 		return {
+	// 			...d,
+	// 			properties
+	// 		};
+	// 	});
 
-		// write output file
-		const dst = `${geoOutputDir}/${jurisdictionID}_transitLines.geojson`;
-		fs.writeFileSync(dst, JSON.stringify(data));
+	// 	// filter out any transit lines that aren't present in the stations data
+	// 	const validModes = [
+	// 		'Bus Rapid Transit',
+	// 		'Arterial Rapid Transit',
+	// 		'Streetcar',
+	// 		'Light Rail',
+	// 		'Commuter Rail'
+	// 	];
+	// 	data.features = data.features.filter((d) => validModes.includes(d.properties.MODE));
+
+	// 	// write output file
+	// 	const dst = `${geoOutputDir}/${jurisdictionID}_transitLines.geojson`;
+	// 	fs.writeFileSync(dst, JSON.stringify(data));
+	// });
+
+	// --- PREPPING COMBINED TRANSIT LINES GEO FILE
+	const raw = fs.readFileSync(`${inputDir}/allTransit.geojson`);
+	let data = JSON.parse(raw);
+
+	// clean up features
+	data.features = data.features.map((d) => {
+		let properties = {
+			MODE: d.properties['mode'],
+			STATUS: d.properties['status'],
+			NAME: d.properties['name']
+		};
+		return {
+			...d,
+			properties
+		};
 	});
+
+	// filter out any transit lines that aren't present in the stations data
+	const validModes = [
+		'Bus Rapid Transit',
+		'Arterial Rapid Transit',
+		'Streetcar',
+		'Light Rail',
+		'Commuter Rail'
+	];
+	data.features = data.features.filter((d) => validModes.includes(d.properties.MODE));
+
+	// write output to src/data as this file will be read locally by the app
+	const dst = `${dataOutputDir}/allTransitLines.geojson.json`; // .json so its importable
+	fs.writeFileSync(dst, JSON.stringify(data));
 };
 
 (async () => {

@@ -46,6 +46,18 @@ export const setLayerOrder = (map) => {
 		map.moveLayer('demographic-layer', 'road-simple');
 	}
 
+	// alternate transit lines and station locations layers
+	[
+		'stations-area-layer-1',
+		'transit-lines-layer-1',
+		'stations-area-layer-2',
+		'transit-lines-layer-2'
+	].forEach((layer) => {
+		if (map.getLayer(layer)) {
+			map.moveLayer(layer);
+		}
+	});
+
 	// Position the labels at top, above station and transit lines
 	const layers = map.getStyle().layers;
 	layers
@@ -144,7 +156,7 @@ export const updateTransitLinesLayer = (map) => {
 	} else {
 		let currentStationTypeOpts = get(stationTypeOpts);
 		let validOpts = currentStationTypeOpts.map((d) => d.display);
-		data.features = data.features.filter((d) => validOpts.includes(d.properties.MODE));
+		// data.features = data.features.filter((d) => validOpts.includes(d.properties.MODE));
 	}
 
 	// --- Add to map
@@ -194,32 +206,13 @@ export const updateStationsLayer = (map) => {
 	let data = JSON.parse(JSON.stringify(geo.stations)); // copy so we can mutate original
 	data.features = data.features.filter((d) => stationIDs.includes(d.properties.STATION_ID));
 
-	// --- Circles showing each stations location
-	// let id = `stations-layer`;
-	// removeLayer(map, id);
-
-	// // add to map
-	// map.addSource(id, {
-	// 	type: 'geojson',
-	// 	data
-	// });
-	// map.addLayer({
-	// 	id,
-	// 	source: id,
-	// 	type: 'circle',
-	// 	paint: {
-	// 		'circle-color': '#000',
-	// 		'circle-radius': 7,
-	// 		'circle-pitch-alignment': 'map'
-	// 	}
-	// });
-
 	// -- AREA AROUND STATION
-	let id = `stations-area-layer`;
+	// black circles
+	let id = `stations-area-layer-1`;
 	removeLayer(map, id);
 
 	// create a "area" circle around each station
-	let radius = 0.06; // half mile radius around each station
+	let radius = 0.06; // radius (in miles) around each station
 	let circles = data.features.map((d) => {
 		let center = d.geometry.coordinates;
 		return circle(center, radius, {
@@ -249,7 +242,49 @@ export const updateStationsLayer = (map) => {
 			type: 'fill',
 			paint: {
 				'fill-color': '#000'
-				// 'fill-outline-color': '#f00'
+			}
+		},
+		labelLayerId
+	);
+
+	// --- yellow circles
+	id = `stations-area-layer-2`;
+	removeLayer(map, id);
+
+	data = JSON.parse(JSON.stringify(geo.stations)); // copy so we can mutate original
+	data.features = data.features.filter((d) => stationIDs.includes(d.properties.STATION_ID));
+
+	// create a "area" circle around each station
+	radius = 0.03; // radius (in miles) around each station
+	circles = data.features.map((d) => {
+		let center = d.geometry.coordinates;
+		return circle(center, radius, {
+			steps: 30,
+			units: 'miles',
+			properties: d.properties
+		});
+	});
+
+	// combine overlapping areas into single polygon
+	combined = circles[0];
+	for (let c of circles) {
+		combined = union(combined, c);
+	}
+	data.features = [combined];
+
+	// --- Add station areas to map
+	labelLayerId = getLabelsLayerID(map);
+	map.addSource(id, {
+		type: 'geojson',
+		data
+	});
+	map.addLayer(
+		{
+			id,
+			source: id,
+			type: 'fill',
+			paint: {
+				'fill-color': color.yellow
 			}
 		},
 		labelLayerId

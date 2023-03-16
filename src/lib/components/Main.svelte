@@ -1,19 +1,59 @@
 <script>
-	import Options from '$components/ToolTest/Options.svelte';
-	import Map from '$components/ToolTest/Map.svelte';
-	// import DeckGL from '$components/ToolTest/deckgl.svelte';
+	import siteCopy from '$data/siteCopy.json';
+
+	import Hero from '$components/Hero/Hero.svelte';
+	import TextBlocks from '$components/common/TextBlocks.svelte';
+	import Scrolly from '$components/Scrolly/Scrolly.svelte';
+	import About from '$components/About/About.svelte';
+	import ProjectCredits from '$components/ProjectCredits/ProjectCredits.svelte';
+	import MapTool from '$components/MapTool/MapTool.svelte';
+
+	console.log(siteCopy);
 </script>
 
-<div class="wrapper">
-	<Options />
-	<Map />
-	<!-- <DeckGL centerCoords={[50, 50]} /> -->
-</div>
+<!-- Hero -->
+<Hero text={siteCopy.hero} />
 
+<!-- Intro -->
+<section class="intro">
+	<TextBlocks blocks={siteCopy.intro} />
+</section>
+
+<!-- Scrolly -->
+<section class="reforms-overview">
+	<Scrolly scrollContent={siteCopy.scrolly} />
+</section>
+
+<!-- Body -->
+<section class="body">
+	<TextBlocks blocks={siteCopy.body} />
+</section>
+
+<!-- Tool -->
+<section class="map-tool">
+	<MapTool />
+</section>
+
+<!-- About -->
+<section class="about">
+	<About content={siteCopy.about} />
+</section>
+
+<!-- Credits -->
+<section class="credits">
+	<ProjectCredits content={siteCopy.projectCredits} />
+</section>
+
+<!-- <Dummy /> -->
+<div class="spacer" />
+
+<!-- <ToolTest /> -->
 <style lang="scss">
-	.wrapper {
-		height: 100vh;
-		width: 100vw;
-		border: solid 1px red;
+	section {
+		margin-top: 6rem;
+	}
+
+	.spacer {
+		height: 200px;
 	}
 </style>

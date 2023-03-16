@@ -15,20 +15,35 @@ const outputDir = '../src/lib/data';
 const prepJurisdictionData = async () => {
 	console.log('...preparing Jurisdiction data');
 
-	// load raw data
-	const input = '../data/raw/jurisdictions/census_place_data.csv';
+	// load census data to get the JURISDICTION IDs for each jurisdiction
+	let input = '../data/raw/jurisdictions/census_place_data.csv';
+	let jurisdictionLUT = await csv().fromFile(`${input}`);
+
+	// load the jurisdictions-level housing estimates data
+	input = '../data/raw/jurisdictions/jurisdiction_table_for_tool.csv';
 	let jurisdictionData = await csv().fromFile(`${input}`);
 
-	// filter out the two locations to exclude per Yonah
-	const excludedLocations = ['Edgewood', 'University Place'];
-	jurisdictionData = jurisdictionData.filter((d) => !excludedLocations.includes(d.NAME));
+	// filter out locations to exclude per Yonah
+	const excludedLocations = [
+		'Edgewood',
+		'University Place',
+		'King unincorp',
+		'Pierce unincorp',
+		'Snohomish unincorp'
+	];
+	jurisdictionData = jurisdictionData.filter((d) => !excludedLocations.includes(d.name));
 
-	// rename GISJOIN prop to something more specific
+	// Find the JURISDICTION ID and add as prop to each place
 	jurisdictionData = jurisdictionData.map((d) => {
-		let geoID = d.GISJOIN;
-		delete d.GISJOIN;
+		const match = jurisdictionLUT.find((dd) => dd.NAME === d.name);
+		let JURISDICTION_ID = null;
+		if (!match) {
+			console.log(`cannot find match for ${d.name}`);
+		} else {
+			JURISDICTION_ID = match.GISJOIN;
+		}
 		return {
-			JURISDICTION_ID: geoID,
+			JURISDICTION_ID,
 			...d
 		};
 	});

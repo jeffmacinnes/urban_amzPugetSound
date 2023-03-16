@@ -4,6 +4,7 @@ import jurisdictionsCentroids from '$data/jurisdictionsCentroids.csv';
 import jurisdictionData from '$data/jurisdictionData.csv';
 import tractData from '$data/tractData.csv';
 import stationData from '$data/stationData.csv';
+import transitLinesGeo from '$data/allTransitLines.geojson.json';
 
 // all data is hosted at github URL
 const baseURL = 'https://raw.githubusercontent.com/jeffmacinnes/urban_amzPugetSound/main/data/geo/';
@@ -12,7 +13,7 @@ const getGeo = async (jurisdictionID) => {
 	let resp;
 
 	// fetch the 4 different geo files for this jurisdiction
-	const geoTypes = ['jurisdiction', 'tracts', 'stations', 'transitLines'];
+	const geoTypes = ['jurisdiction', 'tracts', 'stations'];
 	for (const geoType of geoTypes) {
 		try {
 			resp = await fetch(`${baseURL}/${jurisdictionID}_${geoType}.geojson`);
@@ -22,7 +23,7 @@ const getGeo = async (jurisdictionID) => {
 			geo[geoType] = { type: 'FeatureCollection', features: [] };
 		}
 	}
-
+	geo['transitLines'] = transitLinesGeo; // full set of transit lines for each geo
 	return geo;
 };
 
@@ -31,7 +32,7 @@ export const MAPBOX_API_KEY = writable('');
 
 // --- Set up drop down options
 export const jurisdictionOpts = readable(
-	jurisdictionData.map((d) => ({ display: d.NAME, key: d.JURISDICTION_ID }))
+	jurisdictionData.map((d) => ({ display: d.name, key: d.JURISDICTION_ID }))
 );
 export const demographicOpts = readable([
 	{ display: 'Housing Value', key: 'Med_housing_value' },
@@ -43,7 +44,7 @@ export const demographicOpts = readable([
 	{ display: 'Share of White Households', key: 'White_non_hisp' },
 	{ display: 'Share of Black Housholds', key: 'Black_non_hisp' },
 	{ display: 'Share of Latino/a Households', key: 'Hispanic' },
-	{ display: 'Share of Asian Households', key: 'Asian_non_hisp' },
+	{ display: 'Share of Asian Households', key: 'Asian_non_Hisp' },
 	{ display: 'Job Density', key: 'Job_density' },
 	{ display: 'Share of Transit Commuters', key: 'Transit_to_work' },
 	{ display: 'Share of Bike Commuters', key: 'Bike_to_work' },
@@ -51,16 +52,13 @@ export const demographicOpts = readable([
 	{ display: 'Share of Green Commuters', key: 'Green_commute_share' }
 ]);
 
-// export const stationTypeOpts = readable(
-// 	[...new Set(stationData.map((d) => d.mode)), 'All'].map((d) => ({ display: d, key: d }))
-// );
 export const reformTypeOpts = readable([
-	{ display: 'Baseline', key: 'baseline_under_zoning' },
+	{ display: 'No Zoning Changes', key: 'baseline_under_zoning' },
 	{ display: 'Plexify', key: 'plexify_reform' },
 	{ display: 'Multiply', key: 'multiply_reform' },
 	{ display: 'Legalize', key: 'legalize_reform' },
 	{ display: 'Missing Middle', key: 'middle_reform' },
-	{ display: 'All', key: 'all_reforms' }
+	{ display: 'Enacted All', key: 'all_reforms' }
 ]);
 
 // Set initial values (should be the "key" prop of desired value of corresponding opt)
@@ -100,17 +98,24 @@ export const geoData = derived(jurisdiction, ($jurisdiction, set) => {
 
 // --- Update stationType opts based on what's available in current jurisdiction
 export const stationTypeOpts = derived(geoData, ($geoData) => {
-	if (!$geoData.stations) return [{ display: 'All', key: 'All' }];
+	if (!$geoData.stations) return [{ display: 'All Transit Stations', key: 'All' }];
 
 	// get a list of all stations for current jurisdiction
 	const jurisdictionStations = $geoData.stations.features.map((d) => d.properties.STATION_ID);
 	let data = stationData.filter((d) => jurisdictionStations.includes(d.STATION_ID));
 
+	let opts = [
+		{ display: 'All Transit Stations', key: 'All' },
+		{ display: 'Light Rail Stations', key: 'Light Rail' },
+		{ display: 'Bus Stations', key: 'Bus Rapid Transit' },
+		{ display: 'Streetcar Stations', key: 'Streetcar' },
+		{ display: 'Commuter Rail Stations', key: 'Commuter Rail' }
+	];
+
 	// set stationType options based on what types of stations are available in this jurisdiction
-	let opts = ['All', ...new Set(data.map((d) => d.mode))].map((d) => ({
-		display: d,
-		key: d
-	}));
+	let availableOpts = ['All', ...new Set(data.map((d) => d.mode))];
+	opts = opts.filter((d) => availableOpts.includes(d.key));
+
 	return opts;
 });
 
@@ -165,3 +170,22 @@ export const stationsLayerData = derived([geoData, stationType], ([$geoData, $st
 		data
 	};
 });
+
+// estimates for housing at current jursidcition and zoning reform
+export const housingEstimates = derived(
+	[jurisdiction, reformType],
+	([$jurisdiction, $reformType]) => {
+		const currentJurisdiction = jurisdictionData.find((d) => d.JURISDICTION_ID === $jurisdiction);
+		const existing = +currentJurisdiction['existing_housing_units'];
+		const baseline = +currentJurisdiction['baseline_under_zoning'] - existing;
+		const reform = +currentJurisdiction[$reformType] - existing;
+		const reformOverBaseline = reform - baseline;
+
+		return {
+			existing,
+			baseline,
+			reform,
+			reformOverBaseline
+		};
+	}
+);

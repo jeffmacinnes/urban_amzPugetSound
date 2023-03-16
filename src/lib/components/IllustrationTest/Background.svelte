@@ -6,6 +6,8 @@
 	import buildingFill from '$assets/buildingFill.png';
 
 	import { gsap } from 'gsap';
+	import { tweened } from 'svelte/motion';
+
 	import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 	import { MotionPathHelper } from 'gsap/MotionPathHelper';
 	import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
