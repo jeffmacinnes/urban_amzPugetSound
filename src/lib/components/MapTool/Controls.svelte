@@ -44,25 +44,26 @@
 
 	// -- construct reform sentence parts
 	$: reformDiffEstimate = $housingEstimates.reformOverBaseline.toLocaleString('en-US');
-	$: baselineEstimate = $housingEstimates.baseline.toLocaleString('en-US');
+	$: baselineEstimate = $housingEstimates.baselineTotal.toLocaleString('en-US');
 	$: existingEstimate = $housingEstimates.existing.toLocaleString('en-US');
 	$: jurisdictionName = $jurisdictionOpts.find((d) => d.key === $jurisdiction).display;
-	let reformMsgA, reformMsgB, reformMsgC;
-	$: console.log($reformType);
+
+	$: console.log('jere', reformDiffEstimate, baselineEstimate, reformMsgD);
+	let reformMsgA, reformMsgB, reformMsgC, reformMsgD;
+	$: reformMsgA = ` currently has <span>${existingEstimate} housing units</span> near transit.`;
 	$: if ($reformType === 'all_reforms') {
 		// i.e. "Enacted all"
-		console.log('here...');
-		reformMsgA = 'If policymakers ';
-		reformMsgB = ' zoning changes in ';
+		reformMsgB = 'If policymakers ';
+		reformMsgC = ' zoning changes, ';
 	} else if ($reformType === 'baseline_under_zoning') {
 		// i.e. "No Zoning Changes"
-		reformMsgA = 'If policymakers enact ';
-		reformMsgB = ' in ';
+		reformMsgB = 'If policymakers enact ';
+		reformMsgC = ', ';
 	} else {
-		reformMsgA = 'If policymakers enacted the ';
-		reformMsgB = ' zoning change in ';
+		reformMsgB = 'If policymakers enacted the ';
+		reformMsgC = ' zoning change, ';
 	}
-	$: reformMsgC = `, <span class="reform-value">${reformDiffEstimate} units</span> could be added to the existing maximum of <span>${baselineEstimate} units</span> near transit under current zoning. ${jurisdictionName} has <span>${existingEstimate} housing units</span> near transit currently.`;
+	$: reformMsgD = `<span class="reform-value">${reformDiffEstimate}</span> units could be added to the existing maximum of <span>${baselineEstimate}</span> near transit under current zoning`;
 </script>
 
 <div class="controls-container">
@@ -91,19 +92,20 @@
 
 			<!-- Reform controls -->
 			<div class="reform-controls control-section">
-				{@html reformMsgA}
-				<Dropdown
-					options={$reformTypeOpts}
-					currentValue={$reformType}
-					on:update={(e) => handleUpdate('reformType', e)}
-				/>
-				{@html reformMsgB}
 				<Dropdown
 					options={$jurisdictionOpts}
 					currentValue={$jurisdiction}
 					on:update={(e) => handleUpdate('jurisdiction', e)}
 				/>
+				{@html reformMsgA}
+				{@html reformMsgB}
+				<Dropdown
+					options={$reformTypeOpts}
+					currentValue={$reformType}
+					on:update={(e) => handleUpdate('reformType', e)}
+				/>
 				{@html reformMsgC}
+				{@html reformMsgD}
 			</div>
 
 			<!-- Transit controls -->
@@ -157,6 +159,7 @@
 		:global(span) {
 			font-weight: var(--font-bold);
 			border-bottom: solid 3px var(--color-gray-darker);
+			white-space: nowrap;
 		}
 
 		:global(span.reform-value) {

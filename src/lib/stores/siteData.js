@@ -178,12 +178,14 @@ export const housingEstimates = derived(
 		const currentJurisdiction = jurisdictionData.find((d) => d.JURISDICTION_ID === $jurisdiction);
 		const existing = +currentJurisdiction['existing_housing_units'];
 		const baseline = +currentJurisdiction['baseline_under_zoning'] - existing;
+		const baselineTotal = +currentJurisdiction['baseline_under_zoning'];
 		const reform = +currentJurisdiction[$reformType] - existing;
 		const reformOverBaseline = reform - baseline;
 
 		return {
 			existing,
 			baseline,
+			baselineTotal,
 			reform,
 			reformOverBaseline
 		};

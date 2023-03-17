@@ -31,7 +31,7 @@
 			accessToken: $MAPBOX_API_KEY,
 			container: mapRef,
 			antialias: true,
-			dragPan: false, //true,
+			dragPan: true,
 			dragRotate: false,
 			scrollZoom: false,
 			style: mapStyle,
