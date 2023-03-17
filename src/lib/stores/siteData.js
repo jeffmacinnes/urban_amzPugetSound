@@ -107,7 +107,7 @@ export const stationTypeOpts = derived(geoData, ($geoData) => {
 	let opts = [
 		{ display: 'All Transit Stations', key: 'All' },
 		{ display: 'Light Rail Stations', key: 'Light Rail' },
-		{ display: 'Bus Stations', key: 'Bus Rapid Transit' },
+		{ display: 'Bus Stations', key: 'Rapid Transit' },
 		{ display: 'Streetcar Stations', key: 'Streetcar' },
 		{ display: 'Commuter Rail Stations', key: 'Commuter Rail' }
 	];

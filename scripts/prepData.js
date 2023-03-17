@@ -122,9 +122,20 @@ const prepStationsData = async () => {
 			const STATION_ID = `S${stringHash(d.station_link)}`;
 			const match = LUT.find((d) => d.STATION_ID === STATION_ID);
 			const JURISDICTION_ID = match ? match.JURISDICTION_ID : 'NA';
+
+			// group arterial and bus rapid transit modes
+			const modeOriginal = d.mode;
+			let mode = d.mode;
+			if (d.mode === 'Arterial Rapid Transit' || d.mode === 'Bus Rapid Transit') {
+				mode = 'Rapid Transit';
+			}
+			delete d.mode;
+
 			return {
 				JURISDICTION_ID,
 				STATION_ID,
+				modeOriginal,
+				mode,
 				...d
 			};
 		})

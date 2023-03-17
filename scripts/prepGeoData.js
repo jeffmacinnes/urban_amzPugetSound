@@ -208,8 +208,14 @@ const prepTransitLineFiles = () => {
 
 	// clean up features
 	data.features = data.features.map((d) => {
+		// group arterial and bus rapid transit modes
+		let mode = d.properties['mode'];
+		if (mode === 'Arterial Rapid Transit' || mode === 'Bus Rapid Transit') {
+			mode = 'Rapid Transit';
+		}
+
 		let properties = {
-			MODE: d.properties['mode'],
+			MODE: mode,
 			STATUS: d.properties['status'],
 			NAME: d.properties['name']
 		};
@@ -220,13 +226,7 @@ const prepTransitLineFiles = () => {
 	});
 
 	// filter out any transit lines that aren't present in the stations data
-	const validModes = [
-		'Bus Rapid Transit',
-		'Arterial Rapid Transit',
-		'Streetcar',
-		'Light Rail',
-		'Commuter Rail'
-	];
+	const validModes = ['Rapid Transit', 'Streetcar', 'Light Rail', 'Commuter Rail'];
 	data.features = data.features.filter((d) => validModes.includes(d.properties.MODE));
 
 	// write output to src/data as this file will be read locally by the app

@@ -55,6 +55,7 @@
 		background-position: right 8px center;
 		background-repeat: no-repeat;
 		background-size: auto 33%;
+		cursor: pointer;
 
 		&:focus {
 			border-radius: 0px;

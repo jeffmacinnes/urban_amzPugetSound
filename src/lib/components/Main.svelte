@@ -1,6 +1,7 @@
 <script>
 	import siteCopy from '$data/siteCopy.json';
 
+	import Header from '$components/Header/Header.svelte';
 	import Hero from '$components/Hero/Hero.svelte';
 	import TextBlocks from '$components/common/TextBlocks.svelte';
 	import Scrolly from '$components/Scrolly/Scrolly.svelte';
@@ -10,6 +11,9 @@
 
 	console.log(siteCopy);
 </script>
+
+<!-- Header -->
+<Header />
 
 <!-- Hero -->
 <Hero text={siteCopy.hero} />

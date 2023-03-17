@@ -23,7 +23,6 @@
 
 	let map = null;
 	let mapLoaded = false;
-	let deck = null;
 	let mapRef;
 	let mapStyle = 'mapbox://styles/urbaninstitute/cleoryx1x000101my2y9cr08m';
 	onMount(() => {
@@ -32,7 +31,7 @@
 			accessToken: $MAPBOX_API_KEY,
 			container: mapRef,
 			antialias: true,
-			dragPan: true,
+			dragPan: false, //true,
 			dragRotate: false,
 			scrollZoom: false,
 			style: mapStyle,
@@ -128,13 +127,5 @@
 		height: 100%;
 		overflow: hidden;
 		// border: solid 1px blue;
-	}
-
-	#deck-canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
 	}
 </style>

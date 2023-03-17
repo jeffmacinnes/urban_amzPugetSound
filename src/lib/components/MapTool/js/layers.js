@@ -11,13 +11,8 @@ import circle from '@turf/circle';
 import union from '@turf/union';
 import { Threebox, THREE } from 'threebox-plugin';
 
-// import * as THREE from 'three';
-
 import { color } from '$data/variables.json';
 import chroma from 'chroma-js';
-
-import { MapboxOverlay } from '@deck.gl/mapbox';
-import { GeoJsonLayer } from '@deck.gl/layers';
 
 const removeLayer = (map, id) => {
 	if (map.getLayer(id)) {
@@ -72,7 +67,7 @@ export const setLayerOrder = (map) => {
 	}
 
 	// Lastly, set the city label on top of everything so it doesn't get obscured
-	map.moveLayer('settlement-major-label');
+	// map.moveLayer('settlement-major-label');
 };
 
 // -- OUTLINE AROUND CURRENT JURISDICTION --------------------------------------
@@ -322,7 +317,11 @@ export const updateHousingLayer = (map) => {
 			window.tb = new Threebox(
 				map,
 				gl, //get the context from Mapbox
-				{ defaultLights: true }
+				{
+					defaultLights: true
+					// enableSelectingObjects: true,
+					// enableTooltips: true
+				}
 			);
 
 			// add columns for each stations
@@ -366,8 +365,11 @@ export const updateHousingLayer = (map) => {
 				// lift up
 				group.position.set(0, 0, -50);
 
-				let tower = tb.Object3D({ obj: group, units: 'meters', anchor: 'center' });
+				let tower = tb.Object3D({ obj: group, units: 'meters', anchor: 'center', tooltip: true });
 				tower.setCoords(d.coords);
+				// tower.addTooltip('text');
+				// tower.addEventListener('SelectedChange', () => console.log('here2'), false);
+				// tower.addEventListener('ObjectMouseOver', handleMouseover, false);
 				tb.add(tower);
 			});
 		},
@@ -376,3 +378,7 @@ export const updateHousingLayer = (map) => {
 		}
 	});
 };
+
+function handleMouseover(e) {
+	console.log(e);
+}

@@ -12,7 +12,7 @@
 
 	let bgContainerW, bgContainerH;
 
-	$: console.log('activeStep', activeStep);
+	// $: console.log('activeStep', activeStep);
 </script>
 
 <div class="scroll-container">
@@ -50,7 +50,7 @@
 <style lang="scss">
 	.scroll-container {
 		width: 100%;
-		margin-top: 6rem;
+		margin-top: 4rem;
 	}
 
 	// If you want to catch cursor interactions on the BG layer
@@ -64,7 +64,7 @@
 	.scroll-background {
 		width: 100%;
 		max-width: 1200px;
-		margin: 40px auto;
+		margin: 100px auto;
 		height: 100vh;
 	}
 
