@@ -63,7 +63,7 @@
 		reformMsgB = 'If policymakers enacted the ';
 		reformMsgC = ' zoning change, ';
 	}
-	$: reformMsgD = `<span class="reform-value">${reformDiffEstimate}</span> units could be added to the existing maximum of <span>${baselineEstimate}</span> near transit under current zoning`;
+	$: reformMsgD = `<span class="reform-value">${reformDiffEstimate}</span> units would be added to the existing maximum of <span>${baselineEstimate}</span> under current zoning.`;
 </script>
 
 <div class="controls-container">
