@@ -4,7 +4,7 @@
 
 <header>
 	<a href="https://www.urban.org"><img src={UrbanLogo} alt="" /></a>
-	<a href="https://www.urban.org/feature-stories-data-blogs">Stories and data tools</a>
+	<a href="https://www.urban.org/features">Stories and data tools</a>
 </header>
 
 <style lang="scss">
