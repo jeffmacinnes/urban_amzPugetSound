@@ -318,8 +318,8 @@ export const updateHousingLayer = (map) => {
 				map,
 				gl, //get the context from Mapbox
 				{
-					defaultLights: true
-					// enableSelectingObjects: true,
+					defaultLights: true,
+					enableSelectingObjects: true
 					// enableTooltips: true
 				}
 			);
@@ -336,7 +336,7 @@ export const updateHousingLayer = (map) => {
 				const baselineBar = new THREE.Mesh(
 					new THREE.BoxGeometry(100, 100, baselineH),
 					new THREE.MeshPhongMaterial({
-						color: color['gray-darker'],
+						color: '#111', //color['gray-darker'],
 						opacity,
 						transparent: true,
 						side: THREE.DoubleSide
@@ -368,8 +368,7 @@ export const updateHousingLayer = (map) => {
 				let tower = tb.Object3D({ obj: group, units: 'meters', anchor: 'center', tooltip: true });
 				tower.setCoords(d.coords);
 				// tower.addTooltip('text');
-				// tower.addEventListener('SelectedChange', () => console.log('here2'), false);
-				// tower.addEventListener('ObjectMouseOver', handleMouseover, false);
+				tower.addEventListener('ObjectMouseOver', handleMouseover, false);
 				tb.add(tower);
 			});
 		},

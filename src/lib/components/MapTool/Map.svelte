@@ -40,7 +40,7 @@
 			pitch: initialViewState.pitch,
 			bearing: initialViewState.bearing
 		});
-		map.on('load', function () {
+		map.on('style.load', function () {
 			map.resize();
 			mapLoaded = true;
 			updateLayers(['jurisdiction', 'demographic', 'transitLines', 'stations', 'housing']);
