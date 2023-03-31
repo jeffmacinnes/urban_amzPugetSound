@@ -10,46 +10,54 @@
 	import MapTool from '$components/MapTool/MapTool.svelte';
 
 	console.log(siteCopy);
+
+	let debug = true;
 </script>
 
-<!-- Header -->
-<Header />
+{#if debug}
+	<section class="map-tool">
+		<MapTool />
+	</section>
+{:else}
+	<!-- Header -->
+	<Header />
 
-<!-- Hero -->
-<Hero text={siteCopy.hero} />
+	<!-- Hero -->
+	<Hero text={siteCopy.hero} />
 
-<!-- Intro -->
-<section class="intro">
-	<TextBlocks blocks={siteCopy.intro} />
-</section>
+	<!-- Intro -->
+	<section class="intro">
+		<TextBlocks blocks={siteCopy.intro} />
+	</section>
 
-<!-- Scrolly -->
-<section class="reforms-overview">
-	<Scrolly scrollContent={siteCopy.scrolly} />
-</section>
+	<!-- Scrolly -->
+	<section class="reforms-overview">
+		<Scrolly scrollContent={siteCopy.scrolly} />
+	</section>
 
-<!-- Body -->
-<section class="body">
-	<TextBlocks blocks={siteCopy.body} />
-</section>
+	<!-- Body -->
+	<section class="body">
+		<TextBlocks blocks={siteCopy.body} />
+	</section>
 
-<!-- Tool -->
-<section class="map-tool">
-	<MapTool />
-</section>
+	<!-- Tool -->
+	<section class="map-tool">
+		<MapTool />
+	</section>
 
-<!-- About -->
-<section class="about">
-	<About content={siteCopy.about} />
-</section>
+	<!-- About -->
+	<section class="about">
+		<About content={siteCopy.about} />
+	</section>
 
-<!-- Credits -->
-<section class="credits">
-	<ProjectCredits content={siteCopy.projectCredits} />
-</section>
+	<!-- Credits -->
+	<section class="credits">
+		<ProjectCredits content={siteCopy.projectCredits} />
+	</section>
 
-<!-- <Dummy /> -->
-<div class="spacer" />
+	<!-- <Dummy /> -->
+	<div class="spacer" />
+{/if}
 
 <!-- <ToolTest /> -->
 <style lang="scss">

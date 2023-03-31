@@ -48,7 +48,6 @@
 	$: existingEstimate = $housingEstimates.existing.toLocaleString('en-US');
 	$: jurisdictionName = $jurisdictionOpts.find((d) => d.key === $jurisdiction).display;
 
-	$: console.log('jere', reformDiffEstimate, baselineEstimate, reformMsgD);
 	let reformMsgA, reformMsgB, reformMsgC, reformMsgD;
 	$: reformMsgA = ` currently has <span>${existingEstimate} housing units</span> near transit.`;
 	$: if ($reformType === 'all_reforms') {

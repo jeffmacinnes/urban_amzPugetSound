@@ -5,8 +5,8 @@
 	import { onMount } from 'svelte';
 
 	import { Deck, FlyToInterpolator } from '@deck.gl/core';
-	import getTileLayer from './layers/tilee';
-	import getHexagonLayer from './layers/hexagonn';
+	i./js/tileeayer from './layers/tilee';
+	imp./js/hexagonner from './layers/hexagonn';
 
 	let deckgl;
 	let mapElement;

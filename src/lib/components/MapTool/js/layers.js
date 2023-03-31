@@ -379,5 +379,5 @@ export const updateHousingLayer = (map) => {
 };
 
 function handleMouseover(e) {
-	console.log(e);
+	// console.log(e);
 }

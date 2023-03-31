@@ -1,14 +1,6 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
-	import {
-		updateJurisdictionLayer,
-		updateDemographicLayer,
-		updateTransitLinesLayer,
-		updateStationsLayer,
-		updateHousingLayer,
-		setLayerOrder
-	} from './js/layers';
 
 	import {
 		MAPBOX_API_KEY,
@@ -19,10 +11,9 @@
 		stationType,
 		reformType
 	} from '$stores/siteData';
-	import { initialViewState } from './js/toolUtils';
+	import { initialViewState, updateView, updateLayers } from './js/mapUtils';
 
 	let map = null;
-	let mapLoaded = false;
 	let mapRef;
 	let mapStyle = 'mapbox://styles/urbaninstitute/cleoryx1x000101my2y9cr08m';
 	onMount(() => {
@@ -42,68 +33,19 @@
 		});
 		map.on('style.load', function () {
 			map.resize();
-			mapLoaded = true;
-			updateLayers(['jurisdiction', 'demographic', 'transitLines', 'stations', 'housing']);
-			updateView();
+			updateLayers(map, ['jurisdiction', 'demographic', 'transitLines', 'stations', 'housing']);
+			updateView(map, $mapView);
 		});
 
 		map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'bottom-right');
 	});
 
-	const updateView = () => {
-		if (!map) return;
-		if (!mapLoaded) return;
-		if (Object.keys($mapView).length === 0) return;
-		let { lng, lat, zoom, pitch, bearing } = $mapView;
-		map.flyTo({
-			center: [lng, lat],
-			zoom,
-			pitch,
-			bearing,
-			speed: 0.5,
-			essential: true // this animation is considered essential with respect to prefers-reduced-motion
-		});
-	};
-
-	const updateLayers = (layersArr) => {
-		if (!map) return;
-		if (!mapLoaded) return;
-		if (Object.keys($geoData).length === 0) return;
-
-		console.log('updating layers: ', layersArr);
-
-		// loop over each layer in layersArr and call the corresponding update fn
-		layersArr.forEach((layerName) => {
-			switch (layerName) {
-				case 'jurisdiction':
-					updateJurisdictionLayer(map);
-					break;
-				case 'demographic':
-					updateDemographicLayer(map);
-					break;
-				case 'transitLines':
-					updateTransitLinesLayer(map);
-					break;
-				case 'stations':
-					updateStationsLayer(map);
-					break;
-				case 'housing':
-					updateHousingLayer(map);
-					break;
-				default:
-					console.log('Can not find a layer that matches ', layerName);
-			}
-		});
-		setLayerOrder(map);
-	};
-
 	// map update triggers
-	$: $mapView, updateView();
-	$: $geoData, updateLayers(['jurisdiction', 'demographic']);
-	$: $demographicLayerData, updateLayers(['demographic']);
-	$: $stationsLayerData, updateLayers(['transitLines', 'stations', 'housing']);
-	$: $reformType, updateLayers(['housing']);
-	// $: console.log($geoData);
+	$: $mapView, updateView(map, $mapView);
+	$: $geoData, updateLayers(map, ['jurisdiction', 'demographic']);
+	$: $demographicLayerData, updateLayers(map, ['demographic']);
+	$: $stationsLayerData, updateLayers(map, ['transitLines', 'stations', 'housing']);
+	$: $reformType, updateLayers(map, ['housing']);
 </script>
 
 <div class="map-container">
