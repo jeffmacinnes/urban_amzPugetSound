@@ -62,7 +62,7 @@ export const reformTypeOpts = readable([
 ]);
 
 // Set initial values (should be the "key" prop of desired value of corresponding opt)
-export const jurisdiction = writable('G53063960'); // SEATTLE -> writable('G53063000');
+export const jurisdiction = writable('G53063000'); // SHORELINE -> writable('G53063960'); // SEATTLE -> writable('G53063000');
 export const demographic = writable('Pop_density');
 export const stationType = writable('All');
 export const reformType = writable('baseline_under_zoning');

@@ -25,6 +25,7 @@
     "gray-medium": "#DCDCDC",
     "gray-light": "#E3E3E3",
     "gray-lighter": "#ECECEC",
-    "gray-lightest": "#F5F5F5"
+    "gray-lightest": "#F5F5F5",
+    "magenta": "#EC008B"
   }
 }
