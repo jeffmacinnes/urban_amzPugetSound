@@ -5,7 +5,7 @@ import dsv from '@rollup/plugin-dsv';
 const config = {
 	plugins: [sveltekit(), dsv()],
 	ssr: {
-		noExternal: ['gsap']
+		noExternal: ['gsap', 'threebox-plugin']
 	}
 };
 
