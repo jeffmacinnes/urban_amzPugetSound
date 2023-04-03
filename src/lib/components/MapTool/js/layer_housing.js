@@ -16,8 +16,6 @@ const generateStationObj = (data) => {
 		for existing housing units, housing units added under current zoning, and housing
 		units added under reformed zoning
 	*/
-	console.log('data', data);
-
 	const { existing, currentZoning, reformedZoning } = data;
 
 	// config settings for determining column type
