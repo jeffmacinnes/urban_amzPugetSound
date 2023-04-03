@@ -4,7 +4,8 @@ import { removeLayer } from './mapUtils';
 import { color } from '$data/variables.json';
 import { Threebox, THREE } from 'threebox-plugin';
 
-//
+// Column config
+const largeThresh = 50_000; // threshold for triggering larger columns
 const defaultOpacity = 0.65;
 const outlineColor = new THREE.Color('#111');
 const hoveredOutlineColor = new THREE.Color('#fff');
@@ -21,7 +22,7 @@ const generateStationObj = (data) => {
 
 	// config settings for determining column type
 	let totalUnits = existing + currentZoning + reformedZoning;
-	let useLargeCols = totalUnits > 50_000;
+	let useLargeCols = totalUnits > largeThresh;
 
 	// --- Create the parent station object
 	let baseDim = 100; // units are meters
@@ -83,6 +84,8 @@ export const updateHousingLayer = (map) => {
 	let reformOpt = get(reformType);
 	let layerData = get(stationsLayerData);
 
+	console.log('layerData', layerData);
+
 	// add props for each station that make clear the baseline value, and how many additional the current reform option would add
 	let data = layerData.data.map((d) => {
 		// each of these values will represent the # of units specific to that category only
@@ -90,11 +93,17 @@ export const updateHousingLayer = (map) => {
 		let currentZoning = +d['baseline_under_zoning'] - existing;
 		let reformedZoning = +d[reformOpt] - +d['baseline_under_zoning'];
 		let coords = [+d.lat, +d.long];
+		let meta = {
+			name: d.name,
+			mode: d.mode,
+			status: d.status
+		};
 		return {
 			existing,
 			currentZoning,
 			reformedZoning,
-			coords
+			coords,
+			meta
 		};
 	});
 
@@ -126,6 +135,7 @@ export const updateHousingLayer = (map) => {
 					anchor: 'center',
 					tooltip: true
 				});
+				tower.stationData = d; // attach station data so accessible from tooltip
 				tower.setCoords(d.coords);
 				tower.addEventListener('ObjectMouseOver', handleStationMouseover, false);
 				tower.addEventListener('ObjectMouseOut', handleStationMouseout, false);
@@ -152,33 +162,75 @@ export const updateHousingLayer = (map) => {
 };
 
 function handleStationMouseover(e) {
-	let obj = e.detail.model;
+	const { model, stationData } = e.detail;
 
 	// walk through children column sections, making outlines white and faces opaque
-	obj.children.forEach((child) => {
+	model.children.forEach((child) => {
 		if (child.isLineSegments) {
 			child.material.color = hoveredOutlineColor;
 		}
-
 		if (child.isMesh) {
 			child.material.opacity = 1;
 		}
 	});
+
+	// --- Update tooltip contents
+	// Station MetaData
+	let { name, mode, status } = stationData.meta;
+	status = status === 'uc' ? 'under construction' : status;
+	const tooltip = document.getElementById('map-tooltip');
+	tooltip.style.opacity = '1';
+	tooltip.querySelector('.station-name').innerHTML = name;
+	tooltip.querySelector('.station-mode').innerHTML = mode;
+	tooltip.querySelector('.station-status').innerHTML = `status: ${status}`;
+
+	// Station Housing units;
+	const { existing, currentZoning, reformedZoning } = stationData;
+	const currentZoningTotal = existing + currentZoning;
+	const reformedZoningTotal = existing + currentZoning + reformedZoning;
+
+	tooltip.querySelector('.n-units.reform').innerHTML = reformedZoningTotal.toLocaleString('en-US');
+	tooltip.querySelector('.n-units.current').innerHTML = currentZoningTotal.toLocaleString('en-US');
+	tooltip.querySelector('.n-units.existing').innerHTML = existing.toLocaleString('en-US');
+
+	// hide reform number and label if reform value is 0 (i.e. "no zoning change" selected)
+	const reformNode = tooltip.querySelector('.units-container.reform');
+	if (reformedZoning === 0) {
+		reformNode.style.display = 'none';
+	} else {
+		reformNode.style.display = 'flex';
+	}
+
+	// hide current zoning number and label if value is 0
+	const currentNode = tooltip.querySelector('.units-container.current');
+	if (currentZoning === 0) {
+		currentNode.style.display = 'none';
+	} else {
+		currentNode.style.display = 'flex';
+	}
+
+	// set the color of the reform val
+	let reformUnitsNode = tooltip.querySelector('.n-units.reform');
+	if (reformedZoningTotal >= largeThresh) {
+		reformUnitsNode.style.borderColor = color.magenta;
+	} else {
+		reformUnitsNode.style.borderColor = color.yellow;
+	}
 }
 
 function handleStationMouseout(e) {
-	let obj = e.detail.model;
+	const { model } = e.detail;
 
 	// walk through children column sections, reset outlines and faces
-	obj.children.forEach((child) => {
+	model.children.forEach((child) => {
 		if (child.isLineSegments) {
 			child.material.color = outlineColor;
 		}
-
 		if (child.isMesh) {
 			child.material.opacity = defaultOpacity;
 		}
 	});
+	document.getElementById('map-tooltip').style.opacity = '0';
 }
 
 function handleStationSelect(e) {

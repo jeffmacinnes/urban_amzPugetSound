@@ -1,7 +1,7 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
-
+	import Tooltip from './Tooltip.svelte';
 	import {
 		MAPBOX_API_KEY,
 		geoData,
@@ -13,6 +13,7 @@
 	} from '$stores/siteData';
 	import { initialViewState, updateView, updateLayers } from './js/mapUtils';
 
+	let tooltipRef;
 	let map = null;
 	let mapRef;
 	let mapStyle = 'mapbox://styles/urbaninstitute/cleoryx1x000101my2y9cr08m';
@@ -40,6 +41,15 @@
 		map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'bottom-right');
 	});
 
+	let mx = 0;
+	let my = 0;
+	const handleMouseMove = (e) => {
+		// get x and y position within the map
+		const rect = e.target.getBoundingClientRect();
+		mx = e.clientX - rect.left;
+		my = e.clientY - rect.top;
+	};
+
 	// map update triggers
 	$: $mapView, updateView(map, $mapView);
 	$: $geoData, updateLayers(map, ['jurisdiction', 'demographic']);
@@ -48,14 +58,16 @@
 	$: $reformType, updateLayers(map, ['housing']);
 </script>
 
-<div class="map-container">
+<div class="map-container" on:mousemove|preventDefault={handleMouseMove}>
 	<div id="map" bind:this={mapRef} />
+	<Tooltip x={mx} y={my} />
+	<!-- <div id="tooltips" style:top={`${ttTop}px`} style:left={`${ttLeft}px`} /> -->
 </div>
 
 <style lang="scss">
 	.map-container {
 		position: relative;
-		width: auto;
+		width: 100%;
 		height: 100%;
 		min-height: 300px;
 		border: solid 1px var(--color-white);
