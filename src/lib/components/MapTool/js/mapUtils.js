@@ -96,8 +96,6 @@ export const updateLayers = (map, layersArr) => {
 	let geo = get(geoData);
 	if (Object.keys(geo).length === 0) return;
 
-	console.log('updating layers: ', layersArr);
-
 	// loop over each layer in layersArr and call the corresponding update fn
 	layersArr.forEach((layerName) => {
 		switch (layerName) {

@@ -85,8 +85,6 @@
 	}));
 
 	$: showMask = overlay === null;
-
-	$: console.log(containerDims);
 </script>
 
 <div class="bg-container" style:height={`${containerDims[1]}px`}>

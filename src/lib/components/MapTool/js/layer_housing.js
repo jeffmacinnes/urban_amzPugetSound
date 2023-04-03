@@ -7,7 +7,7 @@ import { Threebox, THREE } from 'threebox-plugin';
 // Column config
 const largeThresh = 50_000; // threshold for triggering larger columns
 const defaultOpacity = 0.65;
-const outlineColor = new THREE.Color('#111');
+const outlineColor = new THREE.Color('#444');
 const hoveredOutlineColor = new THREE.Color('#fff');
 
 const generateStationObj = (data) => {
@@ -34,7 +34,7 @@ const generateStationObj = (data) => {
 
 	// --- Create subcolumns for each section
 	const colSections = [
-		{ nUnits: existing, color: outlineColor },
+		{ nUnits: existing, color: '#111' },
 		{ nUnits: currentZoning, color: color['gray-darkest'] },
 		{ nUnits: reformedZoning, color: useLargeCols ? color['magenta'] : color['yellow'] }
 	];
@@ -58,7 +58,7 @@ const generateStationObj = (data) => {
 			bar.position.set(0, 0, barPosZ);
 
 			var geometry = new THREE.EdgesGeometry(bar.geometry);
-			var material = new THREE.LineBasicMaterial({ color: '#444' });
+			var material = new THREE.LineBasicMaterial({ color: outlineColor });
 			var wireframe = new THREE.LineSegments(geometry, material);
 			wireframe.position.set(0, 0, barPosZ);
 
@@ -81,8 +81,6 @@ export const updateHousingLayer = (map) => {
 	// --- Prep data for this layer
 	let reformOpt = get(reformType);
 	let layerData = get(stationsLayerData);
-
-	console.log('layerData', layerData);
 
 	// add props for each station that make clear the baseline value, and how many additional the current reform option would add
 	let data = layerData.data.map((d) => {
