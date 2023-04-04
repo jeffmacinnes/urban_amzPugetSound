@@ -1,5 +1,6 @@
 <script>
 	import Scroller from '@sveltejs/svelte-scroller';
+	import Progress from './Progress.svelte';
 	import { getSteps } from './steps.js';
 
 	export let scrollContent;
@@ -12,7 +13,7 @@
 
 	let bgContainerW, bgContainerH;
 
-	// $: console.log('activeStep', activeStep);
+	$: console.log('activeStep', index, activeStep);
 </script>
 
 <div class="scroll-container">
@@ -30,6 +31,9 @@
 					containerDims={[bgContainerW, bgContainerH]}
 					{...activeStep.bgProps}
 				/>
+				<div class="progress-wrapper">
+					<Progress currentReform={activeStep.bgProps.currentReform} />
+				</div>
 			</div>
 		</div>
 
@@ -68,8 +72,25 @@
 		height: 100vh;
 	}
 
-	.fg-step {
+	.bg-layer {
+		position: relative;
 		// border: solid 1px red;
+	}
+
+	.progress-wrapper {
+		position: absolute;
+		top: 0;
+		left: -50px;
+		height: 100%;
+		width: 40px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		// border: solid 1px red;
+	}
+
+	.fg-step {
 		min-height: 100vh;
 		height: 100%;
 		width: 100%;

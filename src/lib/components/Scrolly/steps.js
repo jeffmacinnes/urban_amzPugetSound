@@ -15,6 +15,7 @@ export const getSteps = (scrollContent) => {
 			bgCmp: BG,
 			bgProps: {
 				reformImg: 'Plexify',
+				currentReform: null,
 				flyTo: [0.5, 0.5],
 				scale: 0.8,
 				annotations: [],
@@ -41,6 +42,7 @@ export const getSteps = (scrollContent) => {
 			bgCmp: BG,
 			bgProps: {
 				reformImg: name,
+				currentReform: name,
 				flyTo: [centerAtX, centerAtY],
 				scale: scale,
 				annotations: [],
@@ -66,6 +68,7 @@ export const getSteps = (scrollContent) => {
 				bgCmp: BG,
 				bgProps: {
 					reformImg: name,
+					currentReform: name,
 					flyTo: [centerAtX, centerAtY],
 					scale: scale,
 					annotations: [
@@ -92,6 +95,7 @@ export const getSteps = (scrollContent) => {
 			bgCmp: BG,
 			bgProps: {
 				reformImg: 'Legalize',
+				currentReform: null,
 				flyTo: [0.5, 0.5],
 				scale: 0.8,
 				annotations: [],

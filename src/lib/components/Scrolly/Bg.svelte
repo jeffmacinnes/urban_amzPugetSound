@@ -13,6 +13,7 @@
 
 	export let containerDims = []; // dims for the container holding the fixed bg layer
 	export let reformImg = null; //
+	export let currentReform = null; //
 	export let flyTo = [0.5, 0.5]; // as proportion
 	export let scale = 1;
 	export let annotations = [];
@@ -85,8 +86,6 @@
 	}));
 
 	$: showMask = overlay === null;
-
-	$: console.log(containerDims);
 </script>
 
 <div class="bg-container" style:height={`${containerDims[1]}px`}>
@@ -96,6 +95,7 @@
 
 		{#each annotations as annotation (annotation.id)}
 			<Annotation
+				{currentReform}
 				text={annotation.text}
 				coordinates={annotation.coordinates}
 				scale={annotationScale}

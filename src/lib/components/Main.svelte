@@ -15,9 +15,12 @@
 </script>
 
 {#if debug}
-	<section class="map-tool">
-		<MapTool />
+	<section class="reforms-overview">
+		<Scrolly scrollContent={siteCopy.scrolly} />
 	</section>
+	<!-- <section class="map-tool">
+	<MapTool />
+</section> -->
 {:else}
 	<!-- Header -->
 	<Header />
