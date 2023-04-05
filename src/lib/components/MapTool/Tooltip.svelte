@@ -19,19 +19,22 @@
 	let width = 250;
 	let height;
 	let viewportW, viewportH;
-	let xOffset = 20;
-	let yOffset = 0;
+	let xOffset = 30;
 
 	let top = 0;
 	let left = 0;
+	let arrowSide = 'left';
 
 	//  position the tooltip based on location within viewport
 	$: {
-		// left position
 		if (x + xOffset + width > viewportW) {
+			// left of mouse
 			left = x - xOffset - width;
+			arrowSide = 'arrow-right';
 		} else {
+			// right of mouse
 			left = x + xOffset;
+			arrowSide = 'arrow-left';
 		}
 
 		// top position
@@ -44,6 +47,7 @@
 <div
 	id="map-tooltip"
 	bind:clientHeight={height}
+	class={arrowSide}
 	style:width={`${width}px`}
 	style:top={`${top}px`}
 	style:left={`${left}px`}
@@ -89,8 +93,64 @@
 		box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
 		z-index: 10;
 		opacity: 0;
-		transition: opacity 0.25s;
+		transition: opacity 0.15s;
 		border: solid 1px var(--color-gray);
+	}
+
+	// left facing arrow
+	#map-tooltip.arrow-left {
+		// arrow
+		&:after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: calc(0% - 20px);
+			margin-top: -5px;
+			border-style: solid;
+			border-color: transparent #ffffff transparent transparent;
+			border-width: 10px;
+			transform: translate(0, -1px);
+		}
+
+		// arrow border
+		&:before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: calc(0% - 20px);
+			margin-top: -5px;
+			border-style: solid;
+			border-color: transparent var(--color-gray) transparent transparent;
+			border-width: 11px;
+			transform: translate(-2px, -1px);
+		}
+	}
+
+	// right facing arrow
+	#map-tooltip.arrow-right {
+		&:after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 100%;
+			margin-top: -5px;
+			border-style: solid;
+			border-color: transparent transparent transparent #ffffff;
+			border-width: 10px;
+			transform: translate(0, -1px);
+		}
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 100%;
+			margin-top: -5px;
+			border-style: solid;
+			border-color: transparent transparent transparent var(--color-gray);
+			border-width: 11px;
+			transform: translate(1px, -1px);
+		}
 	}
 
 	.station-mode {
@@ -153,7 +213,7 @@
 	.divider {
 		width: 100%;
 		height: 2px;
-		border-bottom: dashed 1px var(--color-gray-dark);
+		border-bottom: solid 1px var(--color-gray);
 		margin: 10px 0px;
 	}
 </style>

@@ -91,7 +91,7 @@ const setLayerOrder = (map) => {
 // --- Update each of the layers in layersArr
 export const updateLayers = (map, layersArr) => {
 	if (!map) return;
-	if (!map.isStyleLoaded) return;
+	// if (!map.isStyleLoaded()) return;
 
 	let geo = get(geoData);
 	if (Object.keys(geo).length === 0) return;
