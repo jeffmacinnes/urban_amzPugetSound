@@ -11,9 +11,11 @@
 		stationTypeOpts,
 		reformType,
 		reformTypeOpts,
-		housingEstimates
+		housingEstimates,
+		demographicLayerData
 	} from '$stores/siteData';
 	import Dropdown from './Dropdown.svelte';
+	import Legend from '$components/common/Legend.svelte';
 
 	const handleUpdate = (name, e) => {
 		let newValue = e.detail.value;
@@ -34,6 +36,7 @@
 		'current options',
 		$jurisdiction,
 		$demographic,
+		$demographicLayerData,
 		$stationType,
 		$reformType,
 		$housingEstimates
@@ -119,16 +122,31 @@
 			<!-- Demographic controls -->
 			<div class="demographic-controls control-section">
 				<Dropdown
+					style="white"
 					options={$demographicOpts}
 					currentValue={$demographic}
 					on:update={(e) => handleUpdate('demographic', e)}
 				/>
+				<div class="legend-container">
+					{#if $demographicLayerData.colorScale}
+						<Legend
+							colorScale={$demographicLayerData.colorScale}
+							width={265}
+							height={60}
+							nTicks={4}
+						/>
+					{/if}
+				</div>
 			</div>
 		</div>
 	{/if}
 </div>
 
 <style lang="scss">
+	.controls-container {
+		z-index: 100;
+	}
+
 	.controls-open {
 		width: 350px;
 		padding: 16px;

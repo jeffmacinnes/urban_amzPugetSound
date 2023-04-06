@@ -139,10 +139,6 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 		.scaleQuantile()
 		.domain(tractData.map((d) => +d[$demographic])) // pass the whole dataset to a scaleQuantile’s domain
 		.range(colors);
-	// const colorScale = d3
-	// 	.scaleQuantize()
-	// 	.domain(d3.extent(tractData.map((d) => +d[$demographic]))) // pass the whole dataset to a scaleQuantile’s domain
-	// 	.range(colors);
 
 	// compute colors for each tract
 	data = data.map((d) => ({ ...d, color: colorScale(d.value) }));

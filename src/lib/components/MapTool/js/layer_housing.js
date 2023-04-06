@@ -7,7 +7,7 @@ import { Threebox, THREE } from 'threebox-plugin';
 // Column config
 const largeThresh = 50_000; // threshold for triggering larger columns
 const defaultOpacity = 0.65;
-const outlineColor = new THREE.Color('#444');
+const outlineColor = new THREE.Color('#222');
 const hoveredOutlineColor = new THREE.Color('#fff');
 
 const generateStationObj = (data) => {
@@ -34,19 +34,21 @@ const generateStationObj = (data) => {
 
 	// --- Create subcolumns for each section
 	const colSections = [
-		{ nUnits: existing, color: '#111' },
+		{ nUnits: existing, color: color['gray-dark'] },
 		{ nUnits: currentZoning, color: color['gray-darkest'] },
-		{ nUnits: reformedZoning, color: useLargeCols ? color['magenta'] : color['yellow'] }
+		{ nUnits: reformedZoning, color: useLargeCols ? color['yellow-dark'] : color['yellow'] }
 	];
 	let totalH = 0; // init var to track the growing height with each bar
 	colSections
 		.filter((d) => d.nUnits > 0)
 		.forEach((d, i) => {
 			const barH = d.nUnits * heightScalar;
+			let barColor = new THREE.Color(d.color);
+			barColor.convertSRGBToLinear();
 			const bar = new THREE.Mesh(
 				new THREE.BoxGeometry(baseDim, baseDim, barH),
-				new THREE.MeshPhysicalMaterial({
-					color: d.color,
+				new THREE.MeshBasicMaterial({
+					color: barColor,
 					opacity: defaultOpacity,
 					transparent: true,
 					side: THREE.DoubleSide,
@@ -208,7 +210,7 @@ function handleStationMouseover(e) {
 	// set the color of the reform val
 	let reformUnitsNode = tooltip.querySelector('.n-units.reform');
 	if (reformedZoningTotal >= largeThresh) {
-		reformUnitsNode.style.borderColor = color.magenta;
+		reformUnitsNode.style.borderColor = color['yellow-dark'];
 	} else {
 		reformUnitsNode.style.borderColor = color.yellow;
 	}

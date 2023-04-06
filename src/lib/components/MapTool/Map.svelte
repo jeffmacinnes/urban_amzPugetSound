@@ -13,7 +13,6 @@
 	} from '$stores/siteData';
 	import { initialViewState, updateView, updateLayers } from './js/mapUtils';
 
-	let tooltipRef;
 	let map = null;
 	let mapRef;
 	let mapStyle = 'mapbox://styles/urbaninstitute/cleoryx1x000101my2y9cr08m';
@@ -40,21 +39,14 @@
 
 		map.dragPan.enable();
 		map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'bottom-right');
-		map.on('mousemove', (e) => {
-			mx = e.point.x;
-			my = e.point.y;
-		});
+		// map.on('mousemove', (e) => {
+		// 	mx = e.point.x;
+		// 	my = e.point.y;
+		// });
 	});
 
 	let mx = 0;
 	let my = 0;
-	// const handleMouseMove = (e) => {
-	// 	// get x and y position within the map
-	// 	const rect = e.target.getBoundingClientRect();
-	// 	mx = e.clientX - rect.left;
-	// 	my = e.clientY - rect.top;
-	// 	console.log('handleMouseMove', mx, my);
-	// };
 
 	// map update triggers
 	$: $mapView, updateView(map, $mapView);

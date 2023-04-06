@@ -11,7 +11,7 @@
 
 	// console.log(siteCopy);
 
-	let debug = false;
+	let debug = true;
 </script>
 
 {#if debug}
@@ -19,7 +19,7 @@
 		<Scrolly scrollContent={siteCopy.scrolly} />
 	</section> -->
 	<section class="map-tool">
-		<MapTool />
+		<MapTool content={siteCopy.map} />
 	</section>
 {:else}
 	<!-- Header -->
@@ -45,7 +45,7 @@
 
 	<!-- Tool -->
 	<section class="map-tool">
-		<MapTool />
+		<MapTool content={siteCopy.map} />
 	</section>
 
 	<!-- About -->
