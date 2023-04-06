@@ -6,7 +6,7 @@
 
 	export let content = {};
 
-	let showInstructions = true;
+	let showInstructions = false; // true;
 	const hideInstructions = () => (showInstructions = false);
 </script>
 
@@ -43,8 +43,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: rgba(0, 0, 0, 0.35);
-		backdrop-filter: blur(2px);
+		background-color: rgba(0, 0, 0, 0.55);
 		z-index: 11;
 	}
 

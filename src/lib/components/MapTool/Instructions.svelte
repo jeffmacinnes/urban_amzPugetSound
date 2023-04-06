@@ -1,12 +1,26 @@
 <script>
+	import { onMount } from 'svelte';
+
 	import KeyImg from '$assets/map_key.png';
+	import closeIcon from '$assets/icon_close.svg';
+	import rightArrow from '$assets/right-arrow.png';
 
 	export let content;
 
 	const { keyTitle, keyText } = content;
+
+	onMount(() => {
+		// insert the arrow png into the html read in from the site copy gdoc
+		let node = document.querySelector('span.right-arrow');
+		node.innerHTML = `<img src=${rightArrow} />`;
+	});
 </script>
 
 <div class="instructions-container">
+	<div class="close-button">
+		<img src={closeIcon} style:width={'24px'} alt="" />
+	</div>
+
 	<div class="title">{keyTitle}</div>
 	<div class="hover-instructions">hover over a station to see:</div>
 	<div class="image-container">
@@ -16,11 +30,14 @@
 			alt="A vertical column divided into 3 sections representing total housing availability at a given transit station. The bottom section shows the units currently available, the middle section shows the units available under current zoning, and the topmost section shows the units available with reformed zoning"
 		/>
 	</div>
-	<div class="text">{@html keyText}</div>
+	<div class="text">
+		{@html keyText}
+	</div>
 </div>
 
 <style lang="scss">
 	.instructions-container {
+		position: relative;
 		width: 70%;
 		max-width: 840px;
 		background-color: white;
@@ -28,6 +45,18 @@
 		font-size: var(--text-lg);
 		line-height: var(--leading-normal);
 		border: solid 1px var(--color-gray-dark);
+	}
+
+	.close-button {
+		position: absolute;
+		top: 25px;
+		right: 25px;
+		display: flex;
+		justify-content: flex-end;
+
+		img {
+			cursor: pointer;
+		}
 	}
 
 	.title {

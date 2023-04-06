@@ -15,7 +15,7 @@
 		demographicLayerData
 	} from '$stores/siteData';
 	import Dropdown from './Dropdown.svelte';
-	import Legend from '$components/common/Legend.svelte';
+	import LegendQuantile from './LegendQuantile.svelte';
 
 	const handleUpdate = (name, e) => {
 		let newValue = e.detail.value;
@@ -66,6 +66,11 @@
 		reformMsgC = ' zoning change, ';
 	}
 	$: reformMsgD = `<span class="reform-value">${reformDiffEstimate}</span> units would be added to the existing maximum of <span>${baselineEstimate}</span> under current zoning.`;
+
+	// legend components;
+	$: legendProps = $demographicLayerData?.legend;
+
+	$: console.log(legendProps);
 </script>
 
 <div class="controls-container">
@@ -128,13 +133,8 @@
 					on:update={(e) => handleUpdate('demographic', e)}
 				/>
 				<div class="legend-container">
-					{#if $demographicLayerData.colorScale}
-						<Legend
-							colorScale={$demographicLayerData.colorScale}
-							width={265}
-							height={60}
-							nTicks={4}
-						/>
+					{#if $demographicLayerData.legend}
+						<LegendQuantile {legendProps} width={265} height={60} />
 					{/if}
 				</div>
 			</div>

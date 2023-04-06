@@ -120,6 +120,10 @@ export const stationTypeOpts = derived(geoData, ($geoData) => {
 });
 
 // --- Define the data for each layer based on current options
+const roundToNearest = (value, nearest) => {
+	return Math.round(value / nearest) * nearest;
+};
+
 // choropleth layer
 export const demographicLayerData = derived([geoData, demographic], ([$geoData, $demographic]) => {
 	if (!$geoData.tracts) return { data: [] };
@@ -134,19 +138,89 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 		}));
 
 	// set up color scale for current selection
+	const scaleData = tractData.map((d) => +d[$demographic]).filter((d) => d > 0); // filter to remove 0s, which dominate many of the "share of..." values
 	const colors = ['#c6eaff', '#75b4dd', '#2d7fac', '#0a4c6a'];
 	const colorScale = d3
 		.scaleQuantile()
-		.domain(tractData.map((d) => +d[$demographic])) // pass the whole dataset to a scaleQuantile’s domain
+		.domain(scaleData) // pass the whole dataset to a scaleQuantile’s domain
 		.range(colors);
 
-	// compute colors for each tract
+	// assign colors for each tract based on color scale
 	data = data.map((d) => ({ ...d, color: colorScale(d.value) }));
 
-	// TO-DO: legend details...
+	// Legend details for each variable
+	let title;
+	let tickVals = colorScale.quantiles();
+	switch ($demographic) {
+		case 'Med_housing_value':
+			title = 'Med. Housing Value';
+			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format('$,.0f')(d));
+			break;
+		case 'Permits':
+			title = '# of Permits';
+			tickVals = tickVals.map((d) => roundToNearest(d, 1)).map((d) => d3.format(',')(d));
+			break;
+		case 'Subsidized_hsg_share':
+			title = '% Subsidized Housing';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Cost_burdened':
+			title = '% Cost Burdened';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Pop_density':
+			title = 'People per ....';
+			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format(',')(d));
+			break;
+		case 'Med_HH_inc':
+			title = 'Med. Household Income';
+			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format('$,.0f')(d));
+			break;
+		case 'White_non_hisp':
+			title = '% White Households';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Black_non_hisp':
+			title = '% Black Households';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Hispanic':
+			title = '% Latino/a Households';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Asian_non_Hisp':
+			title = '% Asian Households';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Job_density':
+			title = 'Jobs per ...';
+			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format(',')(d));
+			break;
+		case 'Transit_to_work':
+			title = '% Transit to Work';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Bike_to_work':
+			title = '% Bike to Work';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Walk_to_work':
+			title = '% Walk to Work';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'Green_commute_share':
+			title = '% Green Commute';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+	}
+
 	return {
 		data,
-		colorScale
+		legend: {
+			colorScale,
+			title,
+			tickVals
+		}
 	};
 });
 
