@@ -198,11 +198,11 @@
 		}
 
 		&.current {
-			border-color: var(--color-gray-dark);
+			border-color: var(--color-gray-darkeset);
 		}
 
 		&.existing {
-			border-color: var(--color-gray-darkest);
+			border-color: var(--color-gray-dark);
 		}
 	}
 
