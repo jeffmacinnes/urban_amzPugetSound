@@ -39,10 +39,10 @@
 
 		map.dragPan.enable();
 		map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'bottom-right');
-		// map.on('mousemove', (e) => {
-		// 	mx = e.point.x;
-		// 	my = e.point.y;
-		// });
+		map.on('mousemove', (e) => {
+			mx = e.point.x;
+			my = e.point.y;
+		});
 	});
 
 	let mx = 0;
