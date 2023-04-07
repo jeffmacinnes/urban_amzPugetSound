@@ -12,7 +12,8 @@
 		reformType,
 		reformTypeOpts,
 		housingEstimates,
-		demographicLayerData
+		demographicLayerData,
+		demographicLayerLegend
 	} from '$stores/siteData';
 	import Dropdown from './Dropdown.svelte';
 	import LegendQuantile from './LegendQuantile.svelte';
@@ -66,9 +67,6 @@
 		reformMsgC = ' zoning change, ';
 	}
 	$: reformMsgD = `<span class="reform-value">${reformDiffEstimate}</span> units would be added to the existing maximum of <span class="current-value">${baselineEstimate}</span> under current zoning.`;
-
-	// legend components;
-	$: legendProps = $demographicLayerData?.legend;
 </script>
 
 <div class="controls-container">
@@ -131,9 +129,7 @@
 					on:update={(e) => handleUpdate('demographic', e)}
 				/>
 				<div class="legend-container">
-					{#if $demographicLayerData.legend}
-						<LegendQuantile {legendProps} width={265} height={60} />
-					{/if}
+					<LegendQuantile legendProps={$demographicLayerLegend} width={265} height={60} />
 				</div>
 			</div>
 		</div>

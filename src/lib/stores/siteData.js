@@ -124,19 +124,8 @@ const roundToNearest = (value, nearest) => {
 	return Math.round(value / nearest) * nearest;
 };
 
-// choropleth layer
-export const demographicLayerData = derived([geoData, demographic], ([$geoData, $demographic]) => {
-	if (!$geoData.tracts) return { data: [] };
-
-	// filter data to only include tracts within this jurisdiction
-	const currentTracts = $geoData.tracts.features.map((d) => d.properties.TRACT_ID);
-	let data = tractData
-		.filter((d) => currentTracts.includes(d.TRACT_ID))
-		.map((d) => ({
-			TRACT_ID: d.TRACT_ID,
-			value: +d[$demographic]
-		}));
-
+// choropleth legend
+export const demographicLayerLegend = derived(demographic, ($demographic) => {
 	// set up color scale for current selection
 	const scaleData = tractData.map((d) => +d[$demographic]).filter((d) => d > 0); // filter to remove 0s, which dominate many of the "share of..." values
 	const colors = ['#c6eaff', '#75b4dd', '#2d7fac', '#0a4c6a'];
@@ -144,9 +133,6 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 		.scaleQuantile()
 		.domain(scaleData) // pass the whole dataset to a scaleQuantile’s domain
 		.range(colors);
-
-	// assign colors for each tract based on color scale
-	data = data.map((d) => ({ ...d, color: colorScale(d.value) }));
 
 	// Legend details for each variable
 	let title;
@@ -215,14 +201,35 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 	}
 
 	return {
-		data,
-		legend: {
-			colorScale,
-			title,
-			tickVals
-		}
+		colorScale,
+		title,
+		tickVals
 	};
 });
+
+// choropleth layer
+export const demographicLayerData = derived(
+	[geoData, demographic, demographicLayerLegend],
+	([$geoData, $demographic, $demographicLayerLegend]) => {
+		if (!$geoData.tracts) return { data: [] };
+
+		// filter data to only include tracts within this jurisdiction
+		const currentTracts = $geoData.tracts.features.map((d) => d.properties.TRACT_ID);
+		let data = tractData
+			.filter((d) => currentTracts.includes(d.TRACT_ID))
+			.map((d) => ({
+				TRACT_ID: d.TRACT_ID,
+				value: +d[$demographic]
+			}));
+
+		// assign colors for each tract based on color scale
+		data = data.map((d) => ({ ...d, color: $demographicLayerLegend.colorScale(d.value) }));
+
+		return {
+			data
+		};
+	}
+);
 
 // circles for station locations
 export const stationsLayerData = derived([geoData, stationType], ([$geoData, $stationType]) => {
