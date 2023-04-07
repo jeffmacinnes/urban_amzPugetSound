@@ -26,7 +26,7 @@
 		}
 	};
 
-	$: console.log('current options', $jurisdiction, $demographic, $stationType, $reformType);
+	// $: console.log('current options', $jurisdiction, $demographic, $stationType, $reformType);
 </script>
 
 <div class="options-container">

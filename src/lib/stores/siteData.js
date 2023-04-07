@@ -202,9 +202,9 @@ export const demographicLayerData = derived([geoData, demographic], ([$geoData, 
 			break;
 		case 'Bike_to_work':
 			title = '% Bike to Work';
-			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			tickVals = tickVals.map((d) => d3.format('.1%')(d));
 			break;
-		case 'Walk_to_work':
+		case 'Walk_to_Work':
 			title = '% Walk to Work';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;

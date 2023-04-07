@@ -202,7 +202,7 @@
 		}
 
 		&.existing {
-			border-color: #111;
+			border-color: var(--color-gray-darkest);
 		}
 	}
 

@@ -52,7 +52,7 @@
 	$: jurisdictionName = $jurisdictionOpts.find((d) => d.key === $jurisdiction).display;
 
 	let reformMsgA, reformMsgB, reformMsgC, reformMsgD;
-	$: reformMsgA = ` currently has <span>${existingEstimate} housing units</span> near transit.`;
+	$: reformMsgA = ` currently has <span class="existing-value">${existingEstimate} housing units</span> near transit.`;
 	$: if ($reformType === 'all_reforms') {
 		// i.e. "Enacted all"
 		reformMsgB = 'If policymakers ';
@@ -65,12 +65,10 @@
 		reformMsgB = 'If policymakers enacted the ';
 		reformMsgC = ' zoning change, ';
 	}
-	$: reformMsgD = `<span class="reform-value">${reformDiffEstimate}</span> units would be added to the existing maximum of <span>${baselineEstimate}</span> under current zoning.`;
+	$: reformMsgD = `<span class="reform-value">${reformDiffEstimate}</span> units would be added to the existing maximum of <span class="current-value">${baselineEstimate}</span> under current zoning.`;
 
 	// legend components;
 	$: legendProps = $demographicLayerData?.legend;
-
-	$: console.log(legendProps);
 </script>
 
 <div class="controls-container">
@@ -175,8 +173,15 @@
 
 		:global(span) {
 			font-weight: var(--font-bold);
-			border-bottom: solid 3px var(--color-gray-darker);
 			white-space: nowrap;
+		}
+
+		:global(span.existing-value) {
+			border-bottom: solid 3px var(--color-gray);
+		}
+
+		:global(span.current-value) {
+			border-bottom: solid 3px var(--color-gray-darkest);
 		}
 
 		:global(span.reform-value) {
