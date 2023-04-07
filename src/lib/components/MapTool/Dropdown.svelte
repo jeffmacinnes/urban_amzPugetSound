@@ -98,6 +98,7 @@
 		padding-left: 0px;
 		margin: 4px;
 		margin-left: 0px;
+		margin-bottom: 8px;
 		font-size: var(--text-lg);
 		font-weight: var(--font-bold);
 		line-height: var(--leading-normal);
