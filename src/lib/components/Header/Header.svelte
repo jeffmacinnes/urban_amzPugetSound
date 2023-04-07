@@ -19,7 +19,7 @@
 		gap: 36px;
 		background-color: var(--color-white);
 		border-bottom: solid 1px var(--color-gray);
-		z-index: 10;
+		z-index: 100;
 	}
 
 	img {
