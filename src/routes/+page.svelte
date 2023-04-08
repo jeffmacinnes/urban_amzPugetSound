@@ -10,8 +10,8 @@
 </script>
 
 <svelte:head>
-	<title>Urban - Amz Puget Sound</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>Room for All</title>
+	<meta name="description" content="Room for All" />
 </svelte:head>
 
 <section>
