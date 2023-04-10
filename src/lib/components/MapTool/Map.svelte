@@ -1,5 +1,5 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
 	import Tooltip from './Tooltip.svelte';
 	import {
@@ -8,7 +8,6 @@
 		mapView,
 		demographicLayerData,
 		stationsLayerData,
-		stationType,
 		reformType
 	} from '$stores/siteData';
 	import { initialViewState, updateView, updateLayers } from './js/mapUtils';
@@ -39,10 +38,10 @@
 
 		map.dragPan.enable();
 		map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'bottom-right');
-		map.on('mousemove', (e) => {
-			mx = e.point.x;
-			my = e.point.y;
-		});
+		// map.on('mousemove', (e) => {
+		// 	mx = e.point.x;
+		// 	my = e.point.y;
+		// });
 	});
 
 	let mx = 0;

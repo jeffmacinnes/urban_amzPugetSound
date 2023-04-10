@@ -4,6 +4,8 @@ import { removeLayer } from './mapUtils';
 import { color } from '$data/variables.json';
 import { Threebox, THREE } from 'threebox-plugin';
 
+// console.log('hereaaa', Threebox);
+
 // Column config
 const largeThresh = 50_000; // threshold for triggering larger columns
 const defaultOpacity = 0.65;
@@ -114,14 +116,19 @@ export const updateHousingLayer = (map) => {
 		type: 'custom',
 		renderingMode: '3d',
 		onAdd: function (map, gl) {
-			window.tb = new Threebox(
-				map,
-				gl, //get the context from Mapbox
-				{
-					defaultLights: true,
-					enableSelectingObjects: true
-				}
-			);
+			// create tb instance if not already created
+			if (!window.tb) {
+				window.tb = new Threebox(
+					map,
+					gl, // get the context from Mapbox
+					{
+						defaultLights: true,
+						enableSelectingObjects: true
+					}
+				);
+			} else {
+				tb.clear(null, true);
+			}
 
 			// add columns for each stations
 			data.forEach((d) => {
@@ -160,6 +167,12 @@ export const updateHousingLayer = (map) => {
 };
 
 function handleStationMouseover(e) {
+	console.log('here', e, tb.map.mousePos);
+	// var rect = canvas.getBoundingClientRect();
+	// return {
+	// 	x: e.originalEvent.clientX - rect.left - canvas.clientLeft,
+	// 	y: e.originalEvent.clientY - rect.top - canvas.clientTop
+	// };
 	const { model, stationData } = e.detail;
 
 	// walk through children column sections, making outlines white and faces opaque

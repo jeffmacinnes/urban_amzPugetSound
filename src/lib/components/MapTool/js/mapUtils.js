@@ -112,6 +112,7 @@ export const updateLayers = (map, layersArr) => {
 				updateStationsLayer(map);
 				break;
 			case 'housing':
+				console.log('NOT updating housing layer');
 				updateHousingLayer(map);
 				break;
 			default:

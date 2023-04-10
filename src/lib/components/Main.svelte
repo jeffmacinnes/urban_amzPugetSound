@@ -11,7 +11,7 @@
 
 	// console.log(siteCopy);
 
-	let debug = false;
+	let debug = true;
 </script>
 
 {#if debug}

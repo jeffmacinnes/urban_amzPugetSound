@@ -4,7 +4,7 @@
 	"scripts": {
 		"gdoc": "node scripts/fetch-google.js",
 		"style": "node scripts/style-dictionary.js",
-		"dev": "vite dev",
+		"dev": "vite dev --force",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
