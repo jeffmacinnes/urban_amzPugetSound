@@ -5,16 +5,14 @@
     to control the visibility and content of the tooltip. 
 
     Basically:
-      This component creates the tooltip and scaffolds the content within. It is positioned
-      relative to the mouse location within the map-container div. 
+      This component creates the tooltip and scaffolds the content within. It gets its x,y location
+			(relative to the map) from store. 
 
       The mouseover function on the columns (see layer_housing.js) is responsible for 
-      updating the opacity of this tooltip, as well as updating the contents of the 
-      tooltip based on whichever station is current hovered
+      setting the current location of the mouse, updating the opacity of this tooltip, 
+			and updating the contents of the tooltip based on whichever station is current hovered
   */
-
-	export let x = 0; // mouse location within map-container
-	export let y = 0;
+	import { mapMousePos } from '$stores/siteData';
 
 	let width = 250;
 	let height;
@@ -26,6 +24,8 @@
 	let arrowSide = 'left';
 
 	//  position the tooltip based on location within viewport
+	$: x = $mapMousePos.x;
+	$: y = $mapMousePos.y;
 	$: {
 		if (x + xOffset + width > viewportW) {
 			// left of mouse
@@ -63,7 +63,7 @@
 		<div class="n-units-container">
 			<span class="n-units reform">999,999</span>
 		</div>
-		<span class="label reform"> possible units, if zoning reformed</span>
+		<span class="label reform"> possible units, if <span class="reform-type" /> enacted</span>
 	</div>
 
 	<!-- Baseline -->
@@ -95,6 +95,7 @@
 		opacity: 0;
 		transition: opacity 0.15s;
 		border: solid 1px var(--color-gray);
+		pointer-events: none; // so that an "invisible" tooltip doesn't block mouseover on other content
 	}
 
 	// left facing arrow

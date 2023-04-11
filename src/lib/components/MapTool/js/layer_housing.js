@@ -1,10 +1,8 @@
 import { get } from 'svelte/store';
-import { reformType, stationsLayerData } from '$stores/siteData';
+import { reformType, stationsLayerData, mapMousePos } from '$stores/siteData';
 import { removeLayer } from './mapUtils';
 import { color } from '$data/variables.json';
 import { Threebox, THREE } from 'threebox-plugin';
-
-// console.log('hereaaa', Threebox);
 
 // Column config
 const largeThresh = 50_000; // threshold for triggering larger columns
@@ -144,7 +142,6 @@ export const updateHousingLayer = (map) => {
 				tower.setCoords(d.coords);
 				tower.addEventListener('ObjectMouseOver', handleStationMouseover, false);
 				tower.addEventListener('ObjectMouseOut', handleStationMouseout, false);
-				tower.addEventListener('SelectedChange', handleStationSelect, false);
 				tb.add(tower);
 			});
 
@@ -167,15 +164,11 @@ export const updateHousingLayer = (map) => {
 };
 
 function handleStationMouseover(e) {
-	console.log('here', e, tb.map.mousePos);
-	// var rect = canvas.getBoundingClientRect();
-	// return {
-	// 	x: e.originalEvent.clientX - rect.left - canvas.clientLeft,
-	// 	y: e.originalEvent.clientY - rect.top - canvas.clientTop
-	// };
-	const { model, stationData } = e.detail;
+	// update the mouse position store with the current mouse coords
+	mapMousePos.set(tb.map.mousePos);
 
 	// walk through children column sections, making outlines white and faces opaque
+	const { model, stationData } = e.detail;
 	model.children.forEach((child) => {
 		if (child.isLineSegments) {
 			child.material.color = hoveredOutlineColor;
@@ -194,6 +187,10 @@ function handleStationMouseover(e) {
 	tooltip.querySelector('.station-name').innerHTML = name;
 	tooltip.querySelector('.station-mode').innerHTML = mode;
 	tooltip.querySelector('.station-status').innerHTML = `status: ${status}`;
+
+	// Current reform type
+	const currentReform = get(reformType);
+	tooltip.querySelector('.reform-type').innerHTML = currentReform.replace('_', ' ');
 
 	// Station Housing units;
 	const { existing, currentZoning, reformedZoning } = stationData;
@@ -242,8 +239,4 @@ function handleStationMouseout(e) {
 		}
 	});
 	document.getElementById('map-tooltip').style.opacity = '0';
-}
-
-function handleStationSelect(e) {
-	let selectedObj = e.detail;
 }

@@ -35,21 +35,22 @@ export const jurisdictionOpts = readable(
 	jurisdictionData.map((d) => ({ display: d.name, key: d.JURISDICTION_ID }))
 );
 export const demographicOpts = readable([
-	{ display: 'Housing Value', key: 'Med_housing_value' },
-	{ display: '# Building Permits', key: 'Permits' },
-	{ display: 'Subsidized Housing Share', key: 'Subsidized_hsg_share' },
-	{ display: 'Cost Burdended', key: 'Cost_burdened' },
-	{ display: 'Population Density', key: 'Pop_density' },
-	{ display: 'Household Income', key: 'Med_HH_inc' },
-	{ display: 'Share of White Households', key: 'White_non_hisp' },
-	{ display: 'Share of Black Housholds', key: 'Black_non_hisp' },
-	{ display: 'Share of Latino/a Households', key: 'Hispanic' },
+	{ display: 'Median housing value', key: 'Med_housing_value' },
+	{ display: 'Building permits', key: 'Permits' },
+	{ display: 'Affordable housing', key: 'Subsidized_hsg_share' },
+	{ display: 'Cost-burdened renters', key: 'Cost_burdened' },
+	{ display: 'Population density', key: 'Pop_density' },
+	{ display: 'Median household income', key: 'Med_HH_inc' },
+	{ display: 'Share of white households', key: 'White_non_hisp' },
+	{ display: 'Share of black housholds', key: 'Black_non_hisp' },
+	{ display: 'Share of Latino/a households', key: 'Hispanic' },
 	{ display: 'Share of Asian Households', key: 'Asian_non_Hisp' },
 	{ display: 'Job Density', key: 'Job_density' },
-	{ display: 'Share of Transit Commuters', key: 'Transit_to_work' },
-	{ display: 'Share of Bike Commuters', key: 'Bike_to_work' },
-	{ display: 'Share of Walking Commuters', key: 'Walk_to_Work' },
-	{ display: 'Share of Green Commuters', key: 'Green_commute_share' }
+	{ display: 'Share of transit commuters', key: 'Transit_to_work' },
+	{ display: 'Share of bike commuters', key: 'Bike_to_work' },
+	{ display: 'Share of walking commuters', key: 'Walk_to_Work' },
+	{ display: 'Share of green commuters', key: 'Green_commute_share' },
+	{ display: 'Share of degree holders', key: 'BA_plus_25_plus' }
 ]);
 
 export const reformTypeOpts = readable([
@@ -65,7 +66,7 @@ export const reformTypeOpts = readable([
 export const jurisdiction = writable('G53063000'); // SHORELINE -> writable('G53063960'); // SEATTLE -> writable('G53063000');
 export const demographic = writable('Pop_density');
 export const stationType = writable('All');
-export const reformType = writable('baseline_under_zoning');
+export const reformType = writable('plexify_reform');
 
 // --- Set up datasets for each "view" of map
 export const mapView = derived(jurisdiction, ($jurisdiction) => {
@@ -139,63 +140,67 @@ export const demographicLayerLegend = derived(demographic, ($demographic) => {
 	let tickVals = colorScale.quantiles();
 	switch ($demographic) {
 		case 'Med_housing_value':
-			title = 'Med. Housing Value';
+			title = 'In dollars ($)';
 			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format('$,.0f')(d));
 			break;
 		case 'Permits':
-			title = '# of Permits';
+			title = 'Number of permits';
 			tickVals = tickVals.map((d) => roundToNearest(d, 1)).map((d) => d3.format(',')(d));
 			break;
 		case 'Subsidized_hsg_share':
-			title = '% Subsidized Housing';
+			title = 'Share of federally subsidized housing';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Cost_burdened':
-			title = '% Cost Burdened';
+			title = 'Share of renters spending >30% of income on rent';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Pop_density':
-			title = 'People per ....';
+			title = 'Per square mile';
 			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format(',')(d));
 			break;
 		case 'Med_HH_inc':
-			title = 'Med. Household Income';
+			title = 'In dollars ($)';
 			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format('$,.0f')(d));
 			break;
 		case 'White_non_hisp':
-			title = '% White Households';
+			title = '';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Black_non_hisp':
-			title = '% Black Households';
+			title = '';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Hispanic':
-			title = '% Latino/a Households';
+			title = '';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Asian_non_Hisp':
-			title = '% Asian Households';
+			title = '';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Job_density':
-			title = 'Jobs per ...';
+			title = 'Per square mile';
 			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format(',')(d));
 			break;
 		case 'Transit_to_work':
-			title = '% Transit to Work';
+			title = '';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Bike_to_work':
-			title = '% Bike to Work';
+			title = '';
 			tickVals = tickVals.map((d) => d3.format('.1%')(d));
 			break;
 		case 'Walk_to_Work':
-			title = '% Walk to Work';
+			title = '';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Green_commute_share':
-			title = '% Green Commute';
+			title = 'People who use transit, walk, or bike to work';
+			tickVals = tickVals.map((d) => d3.format('.0%')(d));
+			break;
+		case 'BA_plus_25_plus':
+			title = "Adults 25 or older with a bachelor's degree";
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 	}
@@ -268,3 +273,6 @@ export const housingEstimates = derived(
 		};
 	}
 );
+
+// x and y position of the mouse relative to the map container
+export const mapMousePos = writable({ x: 0, y: 0 });

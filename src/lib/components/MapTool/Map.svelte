@@ -57,7 +57,7 @@
 
 <div class="map-container">
 	<div id="map" bind:this={mapRef} />
-	<Tooltip x={mx} y={my} />
+	<Tooltip />
 </div>
 
 <style lang="scss">
