@@ -47,7 +47,7 @@
 		"svelte-check": "^2.9.2",
 		"svelte-preprocess": "^5.0.0",
 		"three": "^0.149.0",
-		"threebox-plugin": "^2.2.7",
+		"threebox-plugin": "github:jeffmacinnes/threebox",
 		"typescript": "^4.9.3",
 		"vite": "^4.0.0",
 		"vite-imagetools": "^4.0.11"
