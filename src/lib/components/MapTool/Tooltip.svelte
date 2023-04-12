@@ -58,12 +58,16 @@
 	<div class="station-status">status: station status</div>
 
 	<div class="spacer" />
+
+	<div class="units">Units in a half mile radius</div>
+	<div class="divider" />
+
 	<!-- Reform Units -->
 	<div class="units-container reform">
 		<div class="n-units-container">
 			<span class="n-units reform">999,999</span>
 		</div>
-		<span class="label reform"> possible units, if <span class="reform-type" /> enacted</span>
+		<span class="label reform"> possible if <span class="reform-type" /> enacted</span>
 	</div>
 
 	<!-- Baseline -->
@@ -71,10 +75,8 @@
 		<div class="n-units-container">
 			<span class="n-units current">999,999</span>
 		</div>
-		<span class="label current"> possible units, with current zoning</span>
+		<span class="label current"> possible with current zoning</span>
 	</div>
-
-	<div class="divider" />
 
 	<!-- Existing -->
 	<div class="units-container existing">
@@ -176,6 +178,10 @@
 		width: 100%;
 	}
 
+	.units {
+		font-weight: var(--font-bold);
+	}
+
 	.units-container {
 		width: 100%;
 		display: flex;
@@ -184,7 +190,7 @@
 	}
 
 	.n-units-container {
-		width: 33%;
+		width: 27%;
 		text-align: right;
 	}
 
@@ -208,13 +214,13 @@
 	}
 
 	.label {
-		width: 66%;
+		width: 70%;
 	}
 
 	.divider {
 		width: 100%;
 		height: 2px;
 		border-bottom: solid 1px var(--color-gray);
-		margin: 10px 0px;
+		margin: 4px 0px 10px;
 	}
 </style>

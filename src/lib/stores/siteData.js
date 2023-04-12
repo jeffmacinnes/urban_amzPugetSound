@@ -106,11 +106,11 @@ export const stationTypeOpts = derived(geoData, ($geoData) => {
 	let data = stationData.filter((d) => jurisdictionStations.includes(d.STATION_ID));
 
 	let opts = [
-		{ display: 'All Transit Stations', key: 'All' },
-		{ display: 'Light Rail Stations', key: 'Light Rail' },
-		{ display: 'BRT Stations', key: 'Rapid Transit' },
-		{ display: 'Streetcar Stations', key: 'Streetcar' },
-		{ display: 'Commuter Rail Stations', key: 'Commuter Rail' }
+		{ display: 'All transit stations', key: 'All' },
+		{ display: 'Light rail stations', key: 'Light Rail' },
+		{ display: 'Bus rapid transit stations', key: 'Rapid Transit' },
+		{ display: 'Streetcar stations', key: 'Streetcar' },
+		{ display: 'Commuter rail stations', key: 'Commuter Rail' }
 	];
 
 	// set stationType options based on what types of stations are available in this jurisdiction

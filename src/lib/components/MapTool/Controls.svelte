@@ -53,7 +53,7 @@
 	$: jurisdictionName = $jurisdictionOpts.find((d) => d.key === $jurisdiction).display;
 
 	let reformMsgA, reformMsgB, reformMsgC, reformMsgD;
-	$: reformMsgA = ` currently has <span class="existing-value">${existingEstimate} housing units</span> near transit.`;
+	$: reformMsgA = ` currently has <span class="existing-value">${existingEstimate} housing units</span> within a half mile of transit.`;
 	$: if ($reformType === 'all_reforms') {
 		// i.e. "Enacted all"
 		reformMsgB = 'If policymakers ';

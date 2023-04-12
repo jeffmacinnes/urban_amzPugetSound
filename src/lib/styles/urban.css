@@ -144,6 +144,10 @@ button {
 	line-height: var(--leading-normal);
 }
 
+.footnote {
+	font-size: var(--text-sm);
+}
+
 .body-content {
 	max-width: var(--body-width);
 	margin: 0 auto;

@@ -28,6 +28,9 @@
 	<Map />
 </div>
 
+<!-- Map Footnote -->
+<div class="footnote"><b>Chart note:</b> {@html content.footnote}</div>
+
 <style lang="scss">
 	.map-tool-wrapper {
 		position: relative;
@@ -52,5 +55,12 @@
 		right: 30px;
 		top: 30px;
 		z-index: 10;
+	}
+
+	.footnote {
+		padding: 16px;
+		b {
+			font-size: inherit;
+		}
 	}
 </style>
