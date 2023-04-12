@@ -66,7 +66,7 @@ export const reformTypeOpts = readable([
 export const jurisdiction = writable('G53063000'); // SHORELINE -> writable('G53063960'); // SEATTLE -> writable('G53063000');
 export const demographic = writable('Pop_density');
 export const stationType = writable('All');
-export const reformType = writable('plexify_reform');
+export const reformType = writable('multiply_reform');
 
 // --- Set up datasets for each "view" of map
 export const mapView = derived(jurisdiction, ($jurisdiction) => {
@@ -108,7 +108,7 @@ export const stationTypeOpts = derived(geoData, ($geoData) => {
 	let opts = [
 		{ display: 'All Transit Stations', key: 'All' },
 		{ display: 'Light Rail Stations', key: 'Light Rail' },
-		{ display: 'Bus Stations', key: 'Rapid Transit' },
+		{ display: 'BRT Stations', key: 'Rapid Transit' },
 		{ display: 'Streetcar Stations', key: 'Streetcar' },
 		{ display: 'Commuter Rail Stations', key: 'Commuter Rail' }
 	];

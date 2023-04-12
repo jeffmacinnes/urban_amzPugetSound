@@ -36,7 +36,7 @@ const generateStationObj = (data) => {
 	const colSections = [
 		{ nUnits: existing, color: color['gray-dark'] },
 		{ nUnits: currentZoning, color: color['gray-darkest'] },
-		{ nUnits: reformedZoning, color: useLargeCols ? color['yellow-dark'] : color['yellow'] }
+		{ nUnits: reformedZoning, color: color['yellow'] } //useLargeCols ? color['yellow-dark'] : color['yellow'] }
 	];
 	let totalH = 0; // init var to track the growing height with each bar
 	colSections
@@ -220,7 +220,7 @@ function handleStationMouseover(e) {
 	// set the color of the reform val
 	let reformUnitsNode = tooltip.querySelector('.n-units.reform');
 	if (reformedZoningTotal >= largeThresh) {
-		reformUnitsNode.style.borderColor = color['yellow-dark'];
+		reformUnitsNode.style.borderColor = color.yellow;
 	} else {
 		reformUnitsNode.style.borderColor = color.yellow;
 	}
