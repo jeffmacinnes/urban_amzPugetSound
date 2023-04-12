@@ -93,7 +93,7 @@
 	}
 
 	select.white {
-		width: 100%;
+		width: 105%;
 		padding: 4px;
 		padding-left: 0px;
 		margin: 4px;

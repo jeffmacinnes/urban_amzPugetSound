@@ -7,7 +7,6 @@
 	import MissingMiddleImg from '$assets/reformIllustrations/MissingMiddle_3200.webp';
 	import MultiplyImg from '$assets/reformIllustrations/Multiply_3200.webp';
 	import LegalizeImg from '$assets/reformIllustrations/Legalize_3200.webp';
-	import TestBg from '$assets/TestBg.png';
 
 	import Annotation from './Annotation.svelte';
 
