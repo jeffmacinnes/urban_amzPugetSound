@@ -101,6 +101,7 @@
 					on:update={(e) => handleUpdate('jurisdiction', e)}
 				/>
 				{@html reformMsgA}
+				<br />
 				{@html reformMsgB}
 				<Dropdown
 					options={$reformTypeOpts}
