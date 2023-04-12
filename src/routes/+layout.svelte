@@ -1,8 +1,13 @@
 <script>
 	import '$styles/app.css';
+	import Header from '$components/Header/Header.svelte';
 </script>
 
 <div class="app">
+	<!-- Header -->
+	<header>
+		<Header />
+	</header>
 	<main>
 		<slot />
 	</main>
@@ -13,6 +18,14 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
+		height: 100%;
+		position: relative;
+	}
+
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 100;
 	}
 
 	main {

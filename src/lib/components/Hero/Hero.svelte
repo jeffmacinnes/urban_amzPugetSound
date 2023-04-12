@@ -4,7 +4,7 @@
 	import linkedinIcon from '$assets/icon_linkedin.svg';
 	import mailIcon from '$assets/icon_mail.svg';
 
-	import bgImg from '$assets/reformIllustrations/Legalize.webp';
+	import bgImg from '$assets/hero.jpg';
 
 	export let text = {
 		eyebrow: '',
@@ -33,7 +33,7 @@
 <svelte:window bind:scrollY />
 <div class="hero-container">
 	<div class="bg-img-container">
-		<img src={bgImg} alt="" style:top={`${-40 + scrollY * 0.1}%`} />
+		<img src={bgImg} alt="" />
 		<div class="mask" />
 	</div>
 
@@ -54,7 +54,9 @@
 <style lang="scss">
 	.hero-container {
 		position: relative;
-		height: 562px;
+		// height: 562px;
+		width: 100%;
+		aspect-ratio: 3 / 1;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -62,6 +64,7 @@
 		gap: 24px;
 		color: white;
 		overflow: hidden;
+		// border: solid 1px red;
 	}
 
 	.bg-img-container {
@@ -75,9 +78,9 @@
 
 		img {
 			position: absolute;
-			top: -50%;
+			// top: -50%;
 			width: 100%;
-			object-fit: cover;
+			// object-fit: cover;
 		}
 
 		.mask {
@@ -85,7 +88,7 @@
 			top: 0;
 			width: 100%;
 			height: 100%;
-			background: rgba(0, 0, 0, 0.5);
+			background: rgba(0, 0, 0, 0.4);
 		}
 	}
 

@@ -2,15 +2,13 @@
 	import UrbanLogo from '$assets/urban-logo-badge-color.svg';
 </script>
 
-<header>
+<div class="header-container">
 	<a href="https://www.urban.org"><img src={UrbanLogo} alt="" /></a>
 	<a href="https://www.urban.org/features">Stories and data tools</a>
-</header>
+</div>
 
 <style lang="scss">
-	header {
-		position: fixed;
-		top: 0;
+	.header-container {
 		width: 100%;
 		padding: 16px 24px;
 		display: flex;

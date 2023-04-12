@@ -3,10 +3,10 @@
 	import { cubicInOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
 
-	import PlexifyImg from '$assets/reformIllustrations/Plexify.webp';
-	import MissingMiddleImg from '$assets/reformIllustrations/MissingMiddle.webp';
-	import MultiplyImg from '$assets/reformIllustrations/Multiply.webp';
-	import LegalizeImg from '$assets/reformIllustrations/Legalize.webp';
+	import PlexifyImg from '$assets/reformIllustrations/Plexify_3200.webp';
+	import MissingMiddleImg from '$assets/reformIllustrations/MissingMiddle_3200.webp';
+	import MultiplyImg from '$assets/reformIllustrations/Multiply_3200.webp';
+	import LegalizeImg from '$assets/reformIllustrations/Legalize_3200.webp';
 	import TestBg from '$assets/TestBg.png';
 
 	import Annotation from './Annotation.svelte';
@@ -34,7 +34,8 @@
 	}
 
 	// --- Camera position and tweens --------------------------
-	let imgDims = [1600, 1600]; // each reform image is 1600 x 1600;
+	let imgDims = [3200, 3200]; // [1600, 1600]; // each reform image is 1600 x 1600;
+	let scaleFactor = imgDims[0] / 1600; // since original scales were based on 1600px image, need to adjust for different images
 	const flyToTween = tweened(flyTo, {
 		delay: 0,
 		duration: 1500,
@@ -51,7 +52,7 @@
 		flyToTween.set(flyTo);
 	}
 	$: if (scale) {
-		scaleTween.set(scale);
+		scaleTween.set(scale / scaleFactor);
 	}
 
 	let transform = `translate(0px, 0px)`;
@@ -78,7 +79,7 @@
 	}
 
 	// --- Annotations setup ----------------------------------
-	$: annotationScale = 1 / scale; // annotation scale should be inverse of img scale
+	$: annotationScale = (1 / scale) * scaleFactor; // annotation scale should be inverse of img scale
 	$: annotations = annotations.map((d, i) => ({
 		// convert coordinates from normalized to pixels
 		coordinates: [d.location[0] * imgDims[0], d.location[1] * imgDims[1]],
@@ -91,7 +92,7 @@
 <div class="bg-container" style:height={`${containerDims[1]}px`}>
 	<!-- Background image and annotations -->
 	<div class="img-container" style:transform>
-		<img src={bgImg} alt="" />
+		<img src={bgImg} alt="" loading="eager" />
 
 		{#each annotations as annotation (annotation.id)}
 			<Annotation

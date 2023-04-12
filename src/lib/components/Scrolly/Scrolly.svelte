@@ -13,7 +13,7 @@
 
 	let bgContainerW, bgContainerH;
 
-	$: console.log('activeStep', index, activeStep);
+	// $: console.log('activeStep', index, activeStep);
 </script>
 
 <div class="scroll-container">

@@ -11,7 +11,7 @@
 
 	// console.log(siteCopy);
 
-	let debug = true;
+	let debug = false;
 </script>
 
 {#if debug}
@@ -22,9 +22,6 @@
 		<MapTool content={siteCopy.map} />
 	</section>
 {:else}
-	<!-- Header -->
-	<Header />
-
 	<!-- Hero -->
 	<Hero text={siteCopy.hero} />
 
