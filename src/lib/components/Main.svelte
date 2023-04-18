@@ -9,8 +9,6 @@
 	import ProjectCredits from '$components/ProjectCredits/ProjectCredits.svelte';
 	import MapTool from '$components/MapTool/MapTool.svelte';
 
-	// console.log(siteCopy);
-
 	let debug = false;
 </script>
 

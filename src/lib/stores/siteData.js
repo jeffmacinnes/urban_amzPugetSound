@@ -68,6 +68,9 @@ export const demographic = writable('Pop_density');
 export const stationType = writable('All');
 export const reformType = writable('multiply_reform');
 
+// hold status of whether map initiated or not
+export const mapReady = writable(false);
+
 // --- Set up datasets for each "view" of map
 export const mapView = derived(jurisdiction, ($jurisdiction) => {
 	if (!$jurisdiction) {

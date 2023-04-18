@@ -116,6 +116,7 @@ export const updateHousingLayer = (map) => {
 		onAdd: function (map, gl) {
 			// create tb instance if not already created
 			if (!window.tb) {
+				console.log('creating tb');
 				window.tb = new Threebox(
 					map,
 					gl, // get the context from Mapbox
@@ -124,7 +125,9 @@ export const updateHousingLayer = (map) => {
 						enableSelectingObjects: true
 					}
 				);
+				console.log(tb);
 			} else {
+				// console.log('tb already created, deleting all objects');
 				tb.clear(null, true);
 			}
 

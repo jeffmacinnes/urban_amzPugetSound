@@ -1,5 +1,5 @@
 import { get } from 'svelte/store';
-import { geoData } from '$stores/siteData';
+import { mapReady, geoData } from '$stores/siteData';
 import { updateJurisdictionLayer } from './layer_jurisdiction';
 import { updateDemographicLayer } from './layer_demographic';
 import { updateTransitLinesLayer } from './layer_transitLines';
@@ -17,8 +17,9 @@ export const initialViewState = {
 export const updateView = (map, view) => {
 	// animate camera motion to new view location
 	if (!map) return;
-	if (!map.isStyleLoaded) return;
-	if (Object.keys(view).length === 0) return;
+
+	const mapIsReady = get(mapReady);
+	if (!mapIsReady) return;
 
 	let { lng, lat, zoom, pitch, bearing } = view;
 	map.flyTo({
@@ -91,7 +92,9 @@ const setLayerOrder = (map) => {
 // --- Update each of the layers in layersArr
 export const updateLayers = (map, layersArr) => {
 	if (!map) return;
-	// if (!map.isStyleLoaded()) return;
+
+	const mapIsReady = get(mapReady);
+	if (!mapIsReady) return;
 
 	let geo = get(geoData);
 	if (Object.keys(geo).length === 0) return;

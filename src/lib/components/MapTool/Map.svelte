@@ -1,9 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
+	import { Threebox } from 'threebox-plugin';
 	import Tooltip from './Tooltip.svelte';
 	import {
 		MAPBOX_API_KEY,
+		mapReady,
 		geoData,
 		mapView,
 		demographicLayerData,
@@ -30,13 +32,38 @@
 			pitch: initialViewState.pitch,
 			bearing: initialViewState.bearing
 		});
+
+		// initiate threebox plugin
+		const mapCanvas = map.getCanvas();
+		const glCtx = mapCanvas.getContext('webgl');
+		window.tb = new Threebox(
+			map,
+			glCtx, // get the context from Mapbox
+			{
+				defaultLights: true,
+				enableSelectingObjects: true
+			}
+		);
+
+		const waitForMap = setInterval(() => {
+			// check if necessary conditions are met before populating the map loaded
+			const mapLoaded = map.loaded();
+			const mapViewLoaded = Object.keys($mapView).length > 0;
+			const geoDataLoaded = Object.keys($geoData).length > 0;
+
+			// once ready, update the view and the layers
+			if (mapLoaded && mapViewLoaded && geoDataLoaded) {
+				mapReady.set(true);
+				updateLayers(map, ['jurisdiction', 'demographic', 'transitLines', 'stations', 'housing']);
+				updateView(map, $mapView);
+				clearInterval(waitForMap);
+			}
+		}, 1000);
+
 		map.on('style.load', function () {
 			map.resize();
-			updateLayers(map, ['jurisdiction', 'demographic', 'transitLines', 'stations', 'housing']);
-			updateView(map, $mapView);
 		});
 
-		map.dragPan.enable();
 		map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'bottom-right');
 	});
 

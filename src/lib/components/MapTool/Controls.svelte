@@ -33,15 +33,15 @@
 		}
 	};
 
-	$: console.log(
-		'current options',
-		$jurisdiction,
-		$demographic,
-		$demographicLayerData,
-		$stationType,
-		$reformType,
-		$housingEstimates
-	);
+	// $: console.log(
+	// 	'current options',
+	// 	$jurisdiction,
+	// 	$demographic,
+	// 	$demographicLayerData,
+	// 	$stationType,
+	// 	$reformType,
+	// 	$housingEstimates
+	// );
 
 	let open = true;
 	let duration = 300;
