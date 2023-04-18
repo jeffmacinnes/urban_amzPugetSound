@@ -1,5 +1,6 @@
 <script>
 	import Main from '$components/Main.svelte';
+	import Meta from '$components/Meta.svelte';
 	import { MAPBOX_API_KEY } from '$stores/siteData';
 
 	export let data; // data object loaded from +page.server.js;
@@ -9,11 +10,11 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Room for All</title>
-	<meta name="description" content="Room for All" />
-</svelte:head>
-
+<Meta
+	title="Room for All"
+	description="Addressing the Affordable Housing Shortage Through Zoning Changes"
+	url=""
+/>
 <section>
 	<Main />
 </section>

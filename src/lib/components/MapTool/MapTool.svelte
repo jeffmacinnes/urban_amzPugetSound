@@ -6,7 +6,7 @@
 
 	export let content = {};
 
-	let showInstructions = false;
+	let showInstructions = true;
 	const hideInstructions = () => (showInstructions = false);
 </script>
 

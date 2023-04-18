@@ -15,6 +15,7 @@
 		demographicLayerData,
 		demographicLayerLegend
 	} from '$stores/siteData';
+	import { pushEvent } from '$utils/GoogleTrackingEvents.js';
 	import Dropdown from './Dropdown.svelte';
 	import LegendQuantile from './LegendQuantile.svelte';
 
@@ -31,6 +32,9 @@
 		} else {
 			console.log('unrecognized dropdown name: ', name);
 		}
+
+		// push event to google tracking
+		pushEvent('Map Control', '', { name: newValue });
 	};
 
 	// $: console.log(
