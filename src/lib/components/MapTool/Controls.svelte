@@ -33,8 +33,19 @@
 			console.log('unrecognized dropdown name: ', name);
 		}
 
-		// push event to google tracking
-		pushEvent(name, 'map.control', { value: newValue });
+		// --- Push event to google tracking
+		// get the display name rather than the variable for easier tracking
+		let eventValue;
+		if (name === 'jurisdiction') {
+			eventValue = $jurisdictionOpts.find((d) => d.key === newValue).display;
+		} else if (name === 'reformType') {
+			eventValue = $reformTypeOpts.find((d) => d.key === newValue).display;
+		} else if (name === 'stationType') {
+			eventValue = $stationTypeOpts.find((d) => d.key === newValue).display;
+		} else if (name === 'demographic') {
+			eventValue = $demographicOpts.find((d) => d.key === newValue).display;
+		}
+		pushEvent(name, 'map.control', { value: eventValue });
 	};
 
 	// $: console.log(

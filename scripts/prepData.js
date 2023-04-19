@@ -27,6 +27,9 @@ const prepJurisdictionData = async () => {
 	const excludedLocations = [
 		'Edgewood',
 		'University Place',
+		'Milton',
+		'Normandy Park',
+		'Newcastle',
 		'King unincorp',
 		'Pierce unincorp',
 		'Snohomish unincorp'
@@ -149,6 +152,6 @@ const prepStationsData = async () => {
 
 (async () => {
 	await prepJurisdictionData();
-	await prepTractData();
-	await prepStationsData();
+	// await prepTractData();
+	// await prepStationsData();
 })();
