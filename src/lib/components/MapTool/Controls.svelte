@@ -34,7 +34,7 @@
 		}
 
 		// push event to google tracking
-		pushEvent('map.control', name, { value: newValue });
+		pushEvent(name, 'map.control', { value: newValue });
 	};
 
 	// $: console.log(
