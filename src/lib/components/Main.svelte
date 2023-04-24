@@ -1,7 +1,6 @@
 <script>
 	import siteCopy from '$data/siteCopy.json';
 
-	import Header from '$components/Header/Header.svelte';
 	import Hero from '$components/Hero/Hero.svelte';
 	import TextBlocks from '$components/common/TextBlocks.svelte';
 	import Scrolly from '$components/Scrolly/Scrolly.svelte';
@@ -9,7 +8,7 @@
 	import ProjectCredits from '$components/ProjectCredits/ProjectCredits.svelte';
 	import MapTool from '$components/MapTool/MapTool.svelte';
 
-	let debug = true;
+	let debug = false;
 </script>
 
 {#if debug}
