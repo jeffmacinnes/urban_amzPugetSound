@@ -12,3 +12,9 @@
 <div class="body-content">
 	<Button>Download Data <img src={IconDownload} alt="" style:width={'16px'} /></Button>
 </div>
+
+<style lang="scss">
+	.body-content {
+		margin: 3rem auto;
+	}
+</style>

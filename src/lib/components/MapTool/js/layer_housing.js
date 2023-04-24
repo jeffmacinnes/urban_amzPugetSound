@@ -5,7 +5,7 @@ import { color } from '$data/variables.json';
 import { Threebox, THREE } from 'threebox-plugin';
 
 // Column config
-const largeThresh = 50_000; // threshold for triggering larger columns
+const largeThresh = 10_000; // 50_000 threshold for triggering larger columns
 const defaultOpacity = 0.65;
 const outlineColor = new THREE.Color('#222');
 const hoveredOutlineColor = new THREE.Color('#fff');
@@ -24,7 +24,7 @@ const generateStationObj = (data) => {
 
 	// --- Create the parent station object
 	let baseDim = 100; // units are meters
-	let heightScalar = 0.075;
+	let heightScalar = 0.2; // 0.075;
 	if (useLargeCols) {
 		let colScalar = 6;
 		baseDim = Math.sqrt(baseDim * baseDim * colScalar); // make the footprint colScalar times bigger
@@ -90,7 +90,8 @@ export const updateHousingLayer = (map) => {
 		let existing = +d['existing_housing_units'];
 		let currentZoning = +d['baseline_under_zoning'] - existing;
 		let reformedZoning = +d[reformOpt] - +d['baseline_under_zoning'];
-		let coords = [+d.lat, +d.long];
+		// let coords = [+d.lat, +d.long];
+		let coords = [+d.long, +d.lat];
 		let meta = {
 			name: d.name,
 			mode: d.mode,
@@ -184,6 +185,7 @@ function handleStationMouseover(e) {
 	// --- Update tooltip contents
 	// Station MetaData
 	let { name, mode, status } = stationData.meta;
+	mode = mode === 'Rapid Transit' ? 'Bus Rapid Transit' : mode;
 	status = status === 'uc' ? 'under construction' : status;
 	const tooltip = document.getElementById('map-tooltip');
 	tooltip.style.opacity = '1';

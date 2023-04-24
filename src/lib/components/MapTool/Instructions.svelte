@@ -90,4 +90,22 @@
 		margin: 0px 4px;
 		transform: translateY(1px);
 	}
+
+	@media screen and (max-width: 768px) {
+		.instructions-container {
+			width: 95%;
+			font-size: var(--text-base);
+		}
+
+		.title {
+			font-size: var(--text-xl);
+			line-height: var(--leading-normal);
+		}
+	}
+
+	@media screen and (max-width: 500px) {
+		.map-key-img {
+			width: 100%;
+		}
+	} ;
 </style>

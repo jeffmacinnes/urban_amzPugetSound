@@ -27,6 +27,10 @@
 	/* Dimensions */
 	--body-width: 760px;
 
+	/* breakpoints */
+	--md: 768px;
+	--sm: 375px;
+
 	/* 
 	Colors are defined in /properties/colors.json and injected via style-dictionary
 	so that they can be used in both css and js

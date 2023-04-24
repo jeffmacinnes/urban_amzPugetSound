@@ -113,33 +113,85 @@ const prepStationsData = async () => {
 			...LUT,
 			...data.features.map((d) => ({
 				JURISDICTION_ID: d.properties.GISJOIN,
-				STATION_ID: `S${stringHash(d.properties.station_link)}` // if this method changes, need to update prepGeoData.js to match
+				STATION_ID: `S${stringHash(d.properties.station_link)}`, // if this method changes, need to update prepGeoData.js to match
+				LNG: d.geometry.coordinates[0],
+				LAT: d.geometry.coordinates[1]
 			}))
 		];
 	});
 
-	// --- Read the raw station data csv, clean up and format
-	let stationData = await csv().fromFile(`${inputDir}/stations_table_for_tool.csv`);
+	// --- OLD (4/24/2023) --- Read the raw station data csv, clean up and format
+	// let stationData = await csv().fromFile(`${inputDir}/stations_table_for_tool.csv`);
+	// stationData = stationData
+	// 	.map((d) => {
+	// 		const STATION_ID = `S${stringHash(d.station_link)}`;
+	// 		const match = LUT.find((d) => d.STATION_ID === STATION_ID);
+	// 		const JURISDICTION_ID = match ? match.JURISDICTION_ID : 'NA';
+
+	// 		// group arterial and bus rapid transit modes
+	// 		const modeOriginal = d.mode;
+	// 		let mode = d.mode;
+	// 		if (d.mode === 'Arterial Rapid Transit' || d.mode === 'Bus Rapid Transit') {
+	// 			mode = 'Rapid Transit';
+	// 		}
+	// 		delete d.mode;
+
+	// 		return {
+	// 			JURISDICTION_ID,
+	// 			STATION_ID,
+	// 			modeOriginal,
+	// 			mode,
+	//			lat: d['long'],  // these are reversed in the original data
+	//			long: d['lat'],
+	// 			...d
+	// 		};
+	// 	})
+	// 	.filter((d) => d.JURISDICTION_ID !== 'NA');
+
+	// // write output file
+	// const dst = `${outputDir}/stationData.csv`;
+	// const ws = fs.createWriteStream(dst);
+	// fastcsv.write(stationData, { headers: true }).pipe(ws);
+
+	/* *** UPDATE 4/24/23 - New station data from Yonah
+	 This new data features housing units directly at the station, not w/in 1/2 mile
+	 New data is similar to old, but needs some reformatting to match the processing
+	 steps above */
+	let stationData = await csv().fromFile(`${inputDir}/propData.csv`);
 	stationData = stationData
 		.map((d) => {
-			const STATION_ID = `S${stringHash(d.station_link)}`;
+			const stationLink = [d['Station'], d['Line'], d['Mode'], d['Status']].join('-');
+			const STATION_ID = `S${stringHash(stationLink)}`;
 			const match = LUT.find((d) => d.STATION_ID === STATION_ID);
 			const JURISDICTION_ID = match ? match.JURISDICTION_ID : 'NA';
+			const lat = match ? match.LAT : null;
+			const long = match ? match.LNG : null;
 
 			// group arterial and bus rapid transit modes
-			const modeOriginal = d.mode;
-			let mode = d.mode;
-			if (d.mode === 'Arterial Rapid Transit' || d.mode === 'Bus Rapid Transit') {
+			const modeOriginal = d.Mode;
+			let mode = d.Mode;
+			if (d.Mode === 'Arterial Rapid Transit' || d.Mode === 'Bus Rapid Transit') {
 				mode = 'Rapid Transit';
 			}
-			delete d.mode;
+			delete d.Mode;
 
 			return {
 				JURISDICTION_ID,
 				STATION_ID,
+				stationLink,
+				name: d['Station'],
+				status: d['Status'],
 				modeOriginal,
 				mode,
-				...d
+				lat,
+				long,
+				existing_housing_units: d['Current units'],
+				baseline_under_zoning: d['Current zoning'],
+				plexify_reform: d['Plexify reform'],
+				multiply_reform: d['Multiply reform'],
+				legalize_reform: d['Legalize reform'],
+				middle_reform: d['Missing middle reform'],
+				all_reforms: d['All reforms']
 			};
 		})
 		.filter((d) => d.JURISDICTION_ID !== 'NA');
@@ -151,7 +203,7 @@ const prepStationsData = async () => {
 };
 
 (async () => {
-	await prepJurisdictionData();
+	//await prepJurisdictionData();
 	// await prepTractData();
-	// await prepStationsData();
+	await prepStationsData();
 })();

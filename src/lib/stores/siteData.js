@@ -82,7 +82,7 @@ export const mapView = derived(jurisdiction, ($jurisdiction) => {
 		lng,
 		pitch: 60,
 		bearing: -30,
-		zoom: 12
+		zoom: 12.5
 	};
 });
 

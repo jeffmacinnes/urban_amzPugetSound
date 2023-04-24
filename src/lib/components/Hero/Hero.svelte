@@ -38,8 +38,8 @@
 	</div>
 
 	<div class="eyebrow">{text.eyebrow}</div>
-	<h1>{text.title}</h1>
-	<p><i>{text.subtitle}</i></p>
+	<h1 class="title">{text.title}</h1>
+	<p class="subtitle"><i>{text.subtitle}</i></p>
 	<div class="date">May XX, 2023</div>
 
 	<div class="social-container">
@@ -54,9 +54,10 @@
 <style lang="scss">
 	.hero-container {
 		position: relative;
-		// height: 562px;
 		width: 100%;
-		aspect-ratio: 3 / 1;
+		// aspect-ratio: 3 / 1;
+		height: 100%;
+		min-height: 450px;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -64,7 +65,6 @@
 		gap: 24px;
 		color: white;
 		overflow: hidden;
-		// border: solid 1px red;
 	}
 
 	.bg-img-container {
@@ -80,7 +80,8 @@
 			position: absolute;
 			// top: -50%;
 			width: 100%;
-			// object-fit: cover;
+			height: 100%;
+			object-fit: cover;
 		}
 
 		.mask {
@@ -92,6 +93,15 @@
 		}
 	}
 
+	.title {
+		text-align: center;
+	}
+
+	.subtitle {
+		text-align: center;
+		margin: 0px;
+	}
+
 	.social-container {
 		display: flex;
 		justify-content: center;
@@ -100,5 +110,11 @@
 	.social-icon {
 		height: 24px;
 		width: 24px;
+	}
+
+	@media screen and (max-width: 768px) {
+		// .hero-container {
+		// 	min-height: 560px;
+		// }
 	}
 </style>

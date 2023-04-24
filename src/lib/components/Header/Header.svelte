@@ -10,7 +10,7 @@
 <style lang="scss">
 	.header-container {
 		width: 100%;
-		padding: 16px 24px;
+		padding: 10px 24px;
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;

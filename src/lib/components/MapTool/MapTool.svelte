@@ -63,4 +63,17 @@
 			font-size: inherit;
 		}
 	}
+
+	@media screen and (max-width: 768px) {
+		.controls-wrapper {
+			right: 16px;
+			top: 16px;
+		}
+	}
+
+	@media screen and (max-width: 400px) {
+		.map-tool-wrapper {
+			height: 90vh;
+		}
+	}
 </style>
