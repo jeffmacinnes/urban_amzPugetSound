@@ -33,6 +33,7 @@
 	}
 
 	// --- Camera position and tweens --------------------------
+	let viewportWidth = 0;
 	let imgDims = [3200, 3200]; // [1600, 1600]; // each reform image is 1600 x 1600;
 	let scaleFactor = imgDims[0] / 1600; // since original scales were based on 1600px image, need to adjust for different images
 	const flyToTween = tweened(flyTo, {
@@ -48,7 +49,17 @@
 	});
 
 	$: if (flyTo) {
-		flyToTween.set(flyTo);
+		/* on smaller width screens, ignore the supplied flyTo location, and set camera position
+		so annotation is centered horizontally and tip of annotation is in bottom half
+		*/
+		if (viewportWidth < 1300 && annotations.length > 0) {
+			let x = annotations[0].location[0];
+			let y = annotations[0].location[1];
+			// console.log('here');
+			flyToTween.set([x, y]);
+		} else {
+			flyToTween.set(flyTo);
+		}
 	}
 	$: if (scale) {
 		scaleTween.set(scale / scaleFactor);
@@ -88,6 +99,7 @@
 	$: showMask = overlay === null;
 </script>
 
+<svelte:window bind:innerWidth={viewportWidth} />
 <div class="bg-container" style:height={`${containerDims[1]}px`}>
 	<!-- Background image and annotations -->
 	<div class="img-container" style:transform>
@@ -168,5 +180,20 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: flex-start;
+	}
+
+	@media screen and (max-width: 1300px) {
+		.bg-container {
+			max-height: 85vh;
+		}
+
+		.overlay {
+			width: 100%;
+			height: auto;
+		}
+
+		.overlay-content {
+			max-width: 768px;
+		}
 	}
 </style>

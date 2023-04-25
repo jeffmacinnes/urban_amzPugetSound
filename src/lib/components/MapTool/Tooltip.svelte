@@ -59,7 +59,7 @@
 
 	<div class="spacer" />
 
-	<div class="units">Units in a half mile radius</div>
+	<div class="units">Units closest to station</div>
 	<div class="divider" />
 
 	<!-- Reform Units -->
@@ -190,7 +190,7 @@
 	}
 
 	.n-units-container {
-		width: 27%;
+		width: 23%;
 		text-align: right;
 	}
 
