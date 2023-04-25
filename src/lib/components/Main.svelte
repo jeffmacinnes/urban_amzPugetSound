@@ -13,12 +13,12 @@
 
 {#if debug}
 	<!-- Hero -->
-	<Hero text={siteCopy.hero} />
+	<!-- <Hero text={siteCopy.hero} /> -->
 
 	<!-- Intro -->
-	<section class="intro">
+	<!-- <section class="intro">
 		<TextBlocks blocks={siteCopy.intro} />
-	</section>
+	</section> -->
 
 	<!-- Scrolly -->
 	<!-- <section class="reforms-overview">
@@ -26,9 +26,9 @@
 	</section> -->
 
 	<!-- Body -->
-	<section class="body">
+	<!-- <section class="body">
 		<TextBlocks blocks={siteCopy.body} />
-	</section>
+	</section> -->
 
 	<!-- Tool -->
 	<section class="map-tool">
@@ -36,14 +36,14 @@
 	</section>
 
 	<!-- About -->
-	<section class="about">
+	<!-- <section class="about">
 		<About content={siteCopy.about} />
-	</section>
+	</section> -->
 
 	<!-- Credits -->
-	<section class="credits">
+	<!-- <section class="credits">
 		<ProjectCredits content={siteCopy.projectCredits} />
-	</section>
+	</section> -->
 
 	<!-- <Dummy /> -->
 	<div class="spacer" />

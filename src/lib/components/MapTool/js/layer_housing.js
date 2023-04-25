@@ -5,7 +5,7 @@ import { color } from '$data/variables.json';
 import { Threebox, THREE } from 'threebox-plugin';
 
 // Column config
-const largeThresh = 10_000; // 50_000 threshold for triggering larger columns
+const largeThresh = 100_000; // 50_000 threshold for triggering larger columns
 const defaultOpacity = 0.65;
 const outlineColor = new THREE.Color('#222');
 const hoveredOutlineColor = new THREE.Color('#fff');
