@@ -7,8 +7,18 @@
 	import About from '$components/About/About.svelte';
 	import ProjectCredits from '$components/ProjectCredits/ProjectCredits.svelte';
 	import MapTool from '$components/MapTool/MapTool.svelte';
+	import NavLinkAnchor from '$components/Helpers/NavLinkAnchor.svelte';
+	import Button from '$components/common/Button.svelte';
 
 	let debug = false;
+
+	const scrollToMap = () => {
+		const el = document.querySelector('#map-tool');
+		if (!el) return;
+		el.scrollIntoView({
+			behavior: 'smooth'
+		});
+	};
 </script>
 
 {#if debug}
@@ -54,6 +64,9 @@
 	<!-- Intro -->
 	<section class="intro">
 		<TextBlocks blocks={siteCopy.intro} />
+		<div class="button-container">
+			<Button style="blue" handleClick={scrollToMap}>Jump to Map ⭣</Button>
+		</div>
 	</section>
 
 	<!-- Scrolly -->
@@ -68,6 +81,7 @@
 
 	<!-- Tool -->
 	<section class="map-tool">
+		<NavLinkAnchor id="map-tool" offset="60" />
 		<MapTool content={siteCopy.map} />
 	</section>
 
@@ -89,12 +103,22 @@
 <style lang="scss">
 	section {
 		margin-top: 6rem;
+
+		&.reforms-overview {
+			margin-top: 0;
+		}
+	}
+
+	.button-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 64px;
 	}
 
 	.spacer {
 		height: 200px;
 	}
-
 	@media screen and (max-width: 768px) {
 		section {
 			margin-top: 3rem;

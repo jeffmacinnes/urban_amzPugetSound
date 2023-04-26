@@ -123,16 +123,9 @@ li {
 }
 
 button {
-	font-size: var(--text-lg);
-	font-weight: var(--font-bold);
-	line-height: var(--leading-none);
-	text-transform: uppercase;
-	text-decoration: none;
-	color: var(--color-black);
-	background: var(--color-white);
-	padding: 12px 16px;
-	border: solid 2px var(--color-black);
 	cursor: pointer;
+	border: none;
+	padding: 0px;
 }
 
 .eyebrow {
