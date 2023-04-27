@@ -69,12 +69,13 @@
 		width: 100%;
 		max-width: 1200px;
 		margin: 100px auto;
-		height: 100vh;
+		height: calc(100vh - 110px);
+		max-height: 800px;
+		// border: solid 1px green;
 	}
 
 	.bg-layer {
 		position: relative;
-		// border: solid 1px red;
 	}
 
 	.progress-wrapper {
@@ -87,7 +88,6 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		// border: solid 1px red;
 	}
 
 	.fg-step {
@@ -111,5 +111,24 @@
 
 	.spacer {
 		height: 100vh;
+	}
+
+	@media screen and (max-width: 1300px) {
+		.scroll-background {
+			margin: 60px auto;
+			height: 90vh;
+			max-height: 1000px;
+		}
+
+		.progress-wrapper {
+			left: 10px;
+		}
+	}
+
+	@media screen and (max-width: 400px) {
+		.scroll-background {
+			height: calc(100vh - 60px);
+			max-height: none;
+		}
 	}
 </style>

@@ -32,39 +32,110 @@
 		bgImg = LegalizeImg; // Default Img
 	}
 
+	// Container dims
+	let viewportW = 0;
+	// let bgContainerSize = [0, 0];
+	let overlaySize = [0, 0];
+	$: overlayPos = viewportW > 1300 ? 'side' : 'top';
+
 	// --- Camera position and tweens --------------------------
-	let viewportWidth = 0;
-	let imgDims = [3200, 3200]; // [1600, 1600]; // each reform image is 1600 x 1600;
-	let scaleFactor = imgDims[0] / 1600; // since original scales were based on 1600px image, need to adjust for different images
+	let imgDims = [3200, 3200];
+
+	// Tweens
 	const flyToTween = tweened(flyTo, {
 		delay: 0,
 		duration: 1500,
 		easing: cubicInOut
 	});
-
 	const scaleTween = tweened(scale, {
 		delay: 0,
 		duration: 1500,
 		easing: cubicInOut
 	});
 
-	$: if (flyTo) {
-		/* on smaller width screens, ignore the supplied flyTo location, and set camera position
-		so annotation is centered horizontally and tip of annotation is in bottom half
+	// Functions to update the camera scale and target
+	let cameraTarget = [0, 0];
+	const setCameraTarget = () => {
+		/* if there's an annotation, ignore the input `flyTo` value and set the camera target
+		so that the annotation is centered horizontally, and the bottom arrow of the annotation 
+		is in the bottom half
 		*/
-		if (viewportWidth < 1300 && annotations.length > 0) {
+		if (annotations.length > 0) {
 			let x = annotations[0].location[0];
 			let y = annotations[0].location[1];
-			// console.log('here');
-			flyToTween.set([x, y]);
-		} else {
-			flyToTween.set(flyTo);
-		}
-	}
-	$: if (scale) {
-		scaleTween.set(scale / scaleFactor);
-	}
+			x = overlayPos === 'side' ? x - 0.05 : x; // offset slightly if overlay is on the side
+			y = overlayPos === 'top' ? y - 0.05 : y; // drop the annotation lower if overlay on top
+			if (viewportW < 400) {
+				y = y - 0.02; // nudge down again for mobile size screens
+			}
 
+			cameraTarget = [x, y];
+		} else {
+			cameraTarget = flyTo;
+		}
+		flyToTween.set(cameraTarget);
+	};
+
+	const computeMinScale = () => {
+		// return the minimum scale that could be applied without showing image edges
+		let minScale = 0.1; // bigger is zooming in, smaller is zooming out. We want to know how far we can zoom out without hitting an edge
+
+		// find the minScale independently in x,y dims, then take the smallest
+		cameraTarget.forEach((pt, i) => {
+			const targetPx = pt * imgDims[i]; // convert from proportion to px
+
+			// calculate distance from target pt to nearest image edge (e.g for X dim, left and right; for Y dim, top and bot)
+			let imgBounds = [0, imgDims[i]]; // image goes from 0 - XXX in this dimension
+			let distToImgEdge = Math.min(...imgBounds.map((d) => Math.abs(targetPx - d)));
+
+			// calculte the distance from middle of container to farthest container edge
+			// const containerMdPt = bgContainerSize[i] / 2;
+			// let containerBounds = [0, bgContainerSize[i]];
+			const containerMdPt = containerDims[i] / 2;
+			let containerBounds = [0, containerDims[i]];
+			if (i === 0) {
+				containerBounds[0] = overlayPos === 'side' ? overlaySize[i] : 0; // adjust lower bound based on where the overlay is
+			} else if (i === 1) {
+				containerBounds[0] = overlayPos === 'top' ? overlaySize[i] : 0;
+			}
+			let distToContainerEdge = Math.max(
+				...containerBounds.map((d) => Math.abs(containerMdPt - d))
+			);
+
+			// calculate the scale that would bring the img edge right to the container edge
+			let thisScale = distToContainerEdge / distToImgEdge;
+			if (thisScale > minScale) {
+				minScale = thisScale;
+			}
+		});
+
+		return minScale;
+	};
+
+	const setCameraScale = () => {
+		// compute the minimum possible scale (i.e. how far out we can zoom before hitting an edge)
+		let minScale = computeMinScale();
+
+		// compare with the scale value that was passed in as prop
+		let scaleFactor = imgDims[0] / 1600; // since original scales were based on 1600px image, need to adjust for different images
+		let origScale = scale / scaleFactor;
+		const newScale = minScale > origScale ? minScale : origScale;
+
+		// update the scale tween
+		scaleTween.set(newScale);
+
+		// The annotations need to be scaled inversely to the image
+		annotationScale = 1 / newScale;
+		// console.log('ideal scale', minScale, 'orig scale', origScale, `going with ${newScale}`);
+	};
+
+	$: flyTo, scale, updateCamera();
+	const updateCamera = () => {
+		setCameraTarget();
+		setCameraScale();
+	};
+
+	// --- Build the image transform that changes the camera position ------
 	let transform = `translate(0px, 0px)`;
 	$: {
 		/* Construct the transform to zoom and center the bgImg at the target location
@@ -79,17 +150,17 @@
 
 		// zoom transform
 		let setOriginToTarget = `translate(-${targetX}px, -${targetY}px)`; // set the origin to the target location
-		let scale = `scale(${$scaleTween})`;
+		let scaleTransform = `scale(${$scaleTween})`;
 
 		// center in container
 		let center = `translate(${containerDims[0] / 2}px, ${containerDims[1] / 2}px)`;
 
 		// combine transforms. NOTE: Transforms applied from RIGHT to LEFT!
-		transform = `${center} ${scale} ${setOriginToTarget}`;
+		transform = `${center} ${scaleTransform} ${setOriginToTarget}`;
 	}
 
 	// --- Annotations setup ----------------------------------
-	$: annotationScale = (1 / scale) * scaleFactor; // annotation scale should be inverse of img scale
+	let annotationScale = 1;
 	$: annotations = annotations.map((d, i) => ({
 		// convert coordinates from normalized to pixels
 		coordinates: [d.location[0] * imgDims[0], d.location[1] * imgDims[1]],
@@ -99,8 +170,12 @@
 	$: showMask = overlay === null;
 </script>
 
-<svelte:window bind:innerWidth={viewportWidth} />
-<div class="bg-container" style:height={`${containerDims[1]}px`}>
+<svelte:window bind:innerWidth={viewportW} />
+<div
+	class="bg-container"
+	style:width={`${containerDims[0]}px`}
+	style:height={`${containerDims[1]}px`}
+>
 	<!-- Background image and annotations -->
 	<div class="img-container" style:transform>
 		<img src={bgImg} alt="" loading="eager" />
@@ -122,7 +197,12 @@
 
 	<!-- Overlay containing info about the current reform -->
 	{#if overlay}
-		<div transition:fade class="overlay">
+		<div
+			transition:fade
+			class="overlay"
+			bind:clientHeight={overlaySize[1]}
+			bind:clientWidth={overlaySize[0]}
+		>
 			<div class="overlay-content">
 				<h2>{overlay.name}</h2>
 				<p>{overlay.overview}</p>
@@ -133,9 +213,6 @@
 
 <style lang="scss">
 	.bg-container {
-		width: 100%;
-		max-height: 800px;
-		// border: solid 1px green;
 		overflow: hidden;
 		position: relative;
 	}
@@ -173,6 +250,7 @@
 		align-items: center;
 		color: white;
 		background-color: var(--color-blue-dark);
+		opacity: 1;
 	}
 
 	.overlay-content {
@@ -183,17 +261,26 @@
 	}
 
 	@media screen and (max-width: 1300px) {
-		.bg-container {
-			max-height: 85vh;
-		}
-
 		.overlay {
 			width: 100%;
 			height: auto;
+			padding: 30px 50px 26px;
 		}
 
 		.overlay-content {
 			max-width: 768px;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		.overlay {
+			padding: 30px 50px 16px;
+		}
+	}
+
+	@media screen and (max-width: 400px) {
+		.overlay {
+			padding: 24px 16px 16px;
 		}
 	}
 </style>

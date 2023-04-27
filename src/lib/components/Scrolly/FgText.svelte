@@ -22,4 +22,16 @@
 		background-color: white;
 		box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
 	}
+
+	@media screen and (max-width: 768px) {
+		.textblock-container {
+			width: 90%;
+		}
+	}
+
+	@media screen and (max-width: 400px) {
+		.textblock-container {
+			padding: 48px 30px;
+		}
+	}
 </style>

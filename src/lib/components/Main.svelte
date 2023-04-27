@@ -10,15 +10,18 @@
 	import NavLinkAnchor from '$components/Helpers/NavLinkAnchor.svelte';
 	import Button from '$components/common/Button.svelte';
 
-	let debug = false;
+	import { pushEvent } from '$utils/GoogleTrackingEvents.js';
 
 	const scrollToMap = () => {
 		const el = document.querySelector('#map-tool');
 		if (!el) return;
+		pushEvent('jumpToMap', 'main.page', { value: true }); // log for analytics
 		el.scrollIntoView({
 			behavior: 'smooth'
 		});
 	};
+
+	let debug = false;
 </script>
 
 {#if debug}
@@ -31,9 +34,9 @@
 	</section> -->
 
 	<!-- Scrolly -->
-	<!-- <section class="reforms-overview">
+	<section class="reforms-overview">
 		<Scrolly scrollContent={siteCopy.scrolly} />
-	</section> -->
+	</section>
 
 	<!-- Body -->
 	<!-- <section class="body">
@@ -41,9 +44,9 @@
 	</section> -->
 
 	<!-- Tool -->
-	<section class="map-tool">
+	<!-- <section class="map-tool">
 		<MapTool content={siteCopy.map} />
-	</section>
+	</section> -->
 
 	<!-- About -->
 	<!-- <section class="about">
@@ -119,14 +122,23 @@
 	.spacer {
 		height: 200px;
 	}
+
 	@media screen and (max-width: 768px) {
 		section {
 			margin-top: 3rem;
 			padding: 0px 16px;
 		}
 
+		.reforms-overview {
+			padding: 0px;
+		}
+
 		.map-tool {
 			padding: 0px;
 		}
 	}
+
+	// @media screen and (max-width: 400px){
+
+	// }
 </style>
