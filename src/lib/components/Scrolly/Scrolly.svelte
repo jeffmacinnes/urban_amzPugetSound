@@ -98,7 +98,7 @@
 		justify-content: center;
 		align-items: center;
 		margin: 20vh 0;
-		pointer-events: none;
+		// pointer-events: none;
 
 		&:first-of-type {
 			margin-top: 0;

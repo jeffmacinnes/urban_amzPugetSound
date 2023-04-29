@@ -8,18 +8,6 @@
 	import ProjectCredits from '$components/ProjectCredits/ProjectCredits.svelte';
 	import MapTool from '$components/MapTool/MapTool.svelte';
 	import NavLinkAnchor from '$components/Helpers/NavLinkAnchor.svelte';
-	import Button from '$components/common/Button.svelte';
-
-	import { pushEvent } from '$utils/GoogleTrackingEvents.js';
-
-	const scrollToMap = () => {
-		const el = document.querySelector('#map-tool');
-		if (!el) return;
-		pushEvent('jumpToMap', 'main.page', { value: true }); // log for analytics
-		el.scrollIntoView({
-			behavior: 'smooth'
-		});
-	};
 
 	let debug = false;
 </script>
@@ -67,9 +55,6 @@
 	<!-- Intro -->
 	<section class="intro">
 		<TextBlocks blocks={siteCopy.intro} />
-		<div class="button-container">
-			<Button style="blue" handleClick={scrollToMap}>Jump to Map ⭣</Button>
-		</div>
 	</section>
 
 	<!-- Scrolly -->

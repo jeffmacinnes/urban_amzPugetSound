@@ -14,7 +14,7 @@ All data used locally by the site is found in `src/lib/data`
 
 ## Developing
 
-The site is built using Svelte. Project files are `src/` directory.
+The site is built using Svelte, and the project scaffolding borrows heavily from the terrific https://github.com/the-pudding/svelte-starter. Project files are `src/` directory.
 
 To install dependencies:
 
@@ -31,8 +31,6 @@ npm run dev
 ## Deploy
 
 The staging site is hosted via Netlify. Pushes to the `main` branch are setup to automatically trigger builds and deployment via Netlify.
-
-The staging site can be found at:
 
 ### Env Variables
 

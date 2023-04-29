@@ -23,7 +23,8 @@ export const getSteps = (scrollContent) => {
 			},
 			fgCmp: FgText,
 			fgProps: {
-				textBlocks: d.slideText
+				textBlocks: d.slideText,
+				showJumpLink: i === 2 // include the "jump to map" button on the last intro slide
 			}
 		});
 	});
