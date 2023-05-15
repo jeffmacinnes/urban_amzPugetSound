@@ -40,7 +40,7 @@
 	<div class="eyebrow">{text.eyebrow}</div>
 	<h1 class="title">{text.title}</h1>
 	<p class="subtitle"><i>{text.subtitle}</i></p>
-	<div class="date">May XX, 2023</div>
+	<div class="date">June 2023</div>
 
 	<div class="social-container">
 		{#each socials as social}
@@ -95,6 +95,7 @@
 
 	.title {
 		text-align: center;
+		max-width: 768px;
 	}
 
 	.subtitle {

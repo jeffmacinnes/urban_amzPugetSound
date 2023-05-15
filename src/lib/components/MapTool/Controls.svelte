@@ -15,7 +15,7 @@
 		demographicLayerData,
 		demographicLayerLegend
 	} from '$stores/siteData';
-	import { pushEvent } from '$utils/GoogleTrackingEvents.js';
+	import { gtagEvent } from '$utils/GoogleTrackingEvents.js';
 	import Dropdown from './Dropdown.svelte';
 	import LegendQuantile from './LegendQuantile.svelte';
 
@@ -45,7 +45,10 @@
 		} else if (name === 'demographic') {
 			eventValue = $demographicOpts.find((d) => d.key === newValue).display;
 		}
-		pushEvent(name, 'map.control', { value: eventValue });
+		gtagEvent('button-click', {
+			'firing-event-name': `map.control.${name}`,
+			'selected-option': eventValue
+		});
 	};
 
 	// $: console.log(
@@ -68,7 +71,7 @@
 	$: jurisdictionName = $jurisdictionOpts.find((d) => d.key === $jurisdiction).display;
 
 	let reformMsgA, reformMsgB, reformMsgC, reformMsgD;
-	$: reformMsgA = ` currently has <span class="existing-value">${existingEstimate} housing units</span> within a half mile of transit.`;
+	$: reformMsgA = ` currently has <span class="existing-value">${existingEstimate} housing units</span> within a half mile of transit and is zoned for a maxiumum of <span class="current-value">${baselineEstimate} units</span>.`;
 	$: if ($reformType === 'all_reforms') {
 		// i.e. "Enacted all"
 		reformMsgB = 'If policymakers ';
@@ -81,7 +84,11 @@
 		reformMsgB = 'If policymakers enacted the ';
 		reformMsgC = ' zoning change, ';
 	}
-	$: reformMsgD = `<span class="reform-value">${reformDiffEstimate} units</span> would be added to the existing maximum of <span class="current-value">${baselineEstimate} units</span> under current zoning.`;
+	$: if (reformDiffEstimate === '0') {
+		reformMsgD = `<span class="reform-value">no additional units</span> could be built.`;
+	} else {
+		reformMsgD = `an additional <span class="reform-value">${reformDiffEstimate} units</span> could be built.`;
+	}
 </script>
 
 <div class="controls-container">

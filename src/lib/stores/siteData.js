@@ -46,11 +46,11 @@ export const demographicOpts = readable([
 	{ display: 'Share of Latino/a households', key: 'Hispanic' },
 	{ display: 'Share of Asian Households', key: 'Asian_non_Hisp' },
 	{ display: 'Job Density', key: 'Job_density' },
-	{ display: 'Share of transit commuters', key: 'Transit_to_work' },
-	{ display: 'Share of bike commuters', key: 'Bike_to_work' },
-	{ display: 'Share of walking commuters', key: 'Walk_to_Work' },
-	{ display: 'Share of green commuters', key: 'Green_commute_share' },
-	{ display: 'Share of degree holders', key: 'BA_plus_25_plus' }
+	{ display: 'Commuters using transit', key: 'Transit_to_work' },
+	{ display: 'Commuters biking', key: 'Bike_to_work' },
+	{ display: 'Commuters walking', key: 'Walk_to_Work' },
+	{ display: 'Commuters using green modes', key: 'Green_commute_share' },
+	{ display: 'Adults with college degrees', key: 'BA_plus_25_plus' }
 ]);
 
 export const reformTypeOpts = readable([
@@ -143,7 +143,7 @@ export const demographicLayerLegend = derived(demographic, ($demographic) => {
 	let tickVals = colorScale.quantiles();
 	switch ($demographic) {
 		case 'Med_housing_value':
-			title = 'In dollars ($)';
+			title = 'In US dollars';
 			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format('$,.0f')(d));
 			break;
 		case 'Permits':
@@ -151,7 +151,7 @@ export const demographicLayerLegend = derived(demographic, ($demographic) => {
 			tickVals = tickVals.map((d) => roundToNearest(d, 1)).map((d) => d3.format(',')(d));
 			break;
 		case 'Subsidized_hsg_share':
-			title = 'Share of federally subsidized housing';
+			title = 'Share of all housing that is federally subsidized';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Cost_burdened':
@@ -159,11 +159,11 @@ export const demographicLayerLegend = derived(demographic, ($demographic) => {
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Pop_density':
-			title = 'Per square mile';
+			title = 'Residents per square mile';
 			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format(',')(d));
 			break;
 		case 'Med_HH_inc':
-			title = 'In dollars ($)';
+			title = 'In US dollars';
 			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format('$,.0f')(d));
 			break;
 		case 'White_non_hisp':
@@ -183,27 +183,27 @@ export const demographicLayerLegend = derived(demographic, ($demographic) => {
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Job_density':
-			title = 'Per square mile';
+			title = 'Workers per square mile';
 			tickVals = tickVals.map((d) => roundToNearest(d, 10)).map((d) => d3.format(',')(d));
 			break;
 		case 'Transit_to_work':
-			title = '';
+			title = 'Share who use transit';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Bike_to_work':
-			title = '';
+			title = 'Share who bike';
 			tickVals = tickVals.map((d) => d3.format('.1%')(d));
 			break;
 		case 'Walk_to_Work':
-			title = '';
+			title = 'Share who walk';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'Green_commute_share':
-			title = 'People who use transit, walk, or bike to work';
+			title = 'Share who walk, bike, or use transit';
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 		case 'BA_plus_25_plus':
-			title = "Adults 25 or older with a bachelor's degree";
+			title = "Share 25 or older with a bachelor's degree";
 			tickVals = tickVals.map((d) => d3.format('.0%')(d));
 			break;
 	}

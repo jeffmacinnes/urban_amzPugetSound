@@ -22,7 +22,9 @@
 	</div>
 
 	<div class="title">{keyTitle}</div>
-	<div class="hover-instructions">hover over a station to see:</div>
+	<div class="hover-instructions">
+		hover over a station to see three measures of housing density:
+	</div>
 	<div class="image-container">
 		<img
 			class="map-key-img"
@@ -68,7 +70,7 @@
 		font-style: italic;
 		font-weight: var(--font-bold);
 		margin-top: 24px;
-		margin-bottom: 16px;
+		margin-bottom: 24px;
 	}
 
 	.image-container {

@@ -1,25 +1,30 @@
 /**
- * pushEvent will fire either a GA4-compliant event
- * or a Google Analytics-compliant view event
- *
- * @param {String} eventName - the name of the fired event
- * @param {String} firingModuleName - the name of the module firing the event; ie, what is this iframe?
- * @param {Object} data - an optional object that will be added to the event detail (default: `{}`)
+	Function to log custom events with google gtag analytics. In order for this to work properly
+	you're <head> element should include the following:
+
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXX"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag('js', new Date());
+		gtag('config', 'G-XXXXXX');
+	</script>
+
+	where "G-XXXXXX" is replaced with your unique google tracking id
+
+
+	inputs:
+		eventType - e.g. 'button-click', 'in-view'
+		data - object with at least a 'firing-module-name' property that defines the element that was acted on
+			e.g. {
+				'firing-module-name': 'my-custom-dropdown',
+				'value': 'current-option'
+			}
  */
 
-export function pushEvent(eventName, firingModuleName, data = {}) {
-	let messageData;
-	if (eventName && firingModuleName) {
-		messageData = {
-			event: eventName,
-			'event-module-name': firingModuleName,
-			'event-type': 'custom'
-		};
-
-		for (let property in data) {
-			messageData[property] = data[property];
-		}
-
-		window.dataLayer.push(messageData);
-	}
+export function gtagEvent(eventType, data = {}) {
+	let messageData = ['event', eventType, data];
+	window.dataLayer.push(messageData);
 }
