@@ -25,6 +25,5 @@
  */
 
 export function gtagEvent(eventType, data = {}) {
-	let messageData = ['event', eventType, data];
-	window.dataLayer.push(messageData);
+	gtag('event', eventType, data);
 }

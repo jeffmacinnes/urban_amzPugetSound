@@ -79,17 +79,6 @@
 			border-radius: 0px;
 			outline: none;
 		}
-
-		&:after {
-			position: absolute;
-			content: '';
-			top: 14px;
-			right: 10px;
-			width: 0;
-			height: 0;
-			border: 6px solid transparent;
-			border-color: #fff transparent transparent transparent;
-		}
 	}
 
 	select.white {
