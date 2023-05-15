@@ -1,7 +1,9 @@
 <script>
 	import { slide, fade } from 'svelte/transition';
+	import siteCopy from '$data/siteCopy.json';
 	import controlsIcon from '$assets/icon_controls.svg';
 	import closeIcon from '$assets/icon_close.svg';
+	import infoIcon from '$assets/icon_info.svg';
 	import {
 		jurisdiction,
 		jurisdictionOpts,
@@ -89,6 +91,16 @@
 	} else {
 		reformMsgD = `an additional <span class="reform-value">${reformDiffEstimate} units</span> could be built.`;
 	}
+
+	// --- Reform Definition tooltip
+	$: showTooltip = [
+		'plexify_reform',
+		'multiply_reform',
+		'legalize_reform',
+		'middle_reform',
+		'legalize_reform'
+	].includes($reformType);
+	$: currentDefinition = siteCopy.reformDefinitions.find((d) => d.name === $reformType)?.definition;
 </script>
 
 <div class="controls-container">
@@ -130,6 +142,12 @@
 					currentValue={$reformType}
 					on:update={(e) => handleUpdate('reformType', e)}
 				/>
+				{#if showTooltip}
+					<div id="reform-tooltip-container" data-tooltip={currentDefinition}>
+						<img id="reform-tooltip" src={infoIcon} alt="" />
+					</div>
+				{/if}
+
 				{@html reformMsgC}
 				{@html reformMsgD}
 			</div>
@@ -183,6 +201,24 @@
 		}
 	}
 
+	#reform-tooltip-container {
+		display: inline-block;
+		position: relative;
+		top: 4px;
+		margin-right: 4px;
+		cursor: pointer;
+	}
+
+	#reform-tooltip {
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+
+		&:hover {
+			opacity: 0.9;
+		}
+	}
+
 	.control-section {
 		padding: 16px 0;
 		border-bottom: solid 1px var(--color-gray);
@@ -231,5 +267,64 @@
 			width: 30px;
 			height: 30px;
 		}
+	}
+
+	// Tooltip
+	[data-tooltip]:before,
+	[data-tooltip]:after {
+		visibility: hidden;
+		opacity: 0;
+		pointer-events: none;
+		transition: 0.1s ease-out;
+		transform: translate(-50%, 5px);
+	}
+
+	[data-tooltip]:before {
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		margin-bottom: 5px;
+		padding: 16px;
+		width: 250px;
+		min-width: 70px;
+		max-width: 250px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 0px;
+		border: solid 1px var(--color-gray-darkest);
+		background-color: rgba(255, 255, 255, 1);
+		color: var(--color-gray-darkest);
+		content: attr(data-tooltip);
+		text-align: left;
+		font-size: var(--text-lg);
+		line-height: var(--leading-normal);
+		transition: 0.2s ease-out;
+		box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	[data-tooltip]:after {
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		width: 0;
+		border-top: 5px solid #000;
+		border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+		border-right: 5px solid transparent;
+		border-left: 5px solid transparent;
+		content: ' ';
+		font-size: 0;
+		line-height: 0;
+	}
+
+	[data-tooltip]:hover:before,
+	[data-tooltip]:hover:after {
+		visibility: visible;
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+	[data-tooltip='false']:hover:before,
+	[data-tooltip='false']:hover:after {
+		visibility: hidden;
+		opacity: 0;
 	}
 </style>
