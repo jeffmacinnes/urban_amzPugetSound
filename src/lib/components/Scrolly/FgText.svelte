@@ -1,13 +1,13 @@
 <script>
 	import Button from '$components/common/Button.svelte';
-	import { pushEvent } from '$utils/GoogleTrackingEvents.js';
+	import { gtagEvent } from '$utils/GoogleTrackingEvents.js';
 	export let textBlocks = [];
 	export let showJumpLink = false;
 
 	const scrollToMap = () => {
 		const el = document.querySelector('#map-tool');
 		if (!el) return;
-		pushEvent('jumpToMap', 'main.page', { value: true }); // log for analytics
+		gtagEvent('button-click', { 'firing-module-name': 'jumpToMap' }); // log for analytics
 		el.scrollIntoView({
 			behavior: 'smooth'
 		});
