@@ -308,9 +308,9 @@
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 0px;
-		border: solid 1px var(--color-gray-darkest);
-		background-color: rgba(255, 255, 255, 1);
-		color: var(--color-gray-darkest);
+		border: solid 1px var(--color-black);
+		background-color: rgba(0, 0, 0, 1);
+		color: var(--color-white);
 		content: attr(data-tooltip);
 		text-align: left;
 		font-size: var(--text-lg);
@@ -324,10 +324,10 @@
 		bottom: 100%;
 		left: 50%;
 		width: 0;
-		border-top: 5px solid #000;
-		border-top: 5px solid hsla(0, 0%, 20%, 0.9);
-		border-right: 5px solid transparent;
-		border-left: 5px solid transparent;
+		border-top: 10px solid #000;
+		border-top: 10px solid hsla(0, 0%, 0%, 1);
+		border-right: 10px solid transparent;
+		border-left: 10px solid transparent;
 		content: ' ';
 		font-size: 0;
 		line-height: 0;
