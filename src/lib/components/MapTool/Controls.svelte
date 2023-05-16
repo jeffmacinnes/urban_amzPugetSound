@@ -3,7 +3,8 @@
 	import siteCopy from '$data/siteCopy.json';
 	import controlsIcon from '$assets/icon_controls.svg';
 	import closeIcon from '$assets/icon_close.svg';
-	import infoIcon from '$assets/icon_info.svg';
+	import infoIconDefault from '$assets/icon_info-black.svg';
+	import infoIconHovered from '$assets/icon_info-blue.svg';
 	import {
 		jurisdiction,
 		jurisdictionOpts,
@@ -84,7 +85,7 @@
 		reformMsgC = ', ';
 	} else {
 		reformMsgB = 'If policymakers enacted the ';
-		reformMsgC = ' zoning change, ';
+		reformMsgC = ` zoning* change, `;
 	}
 	$: if (reformDiffEstimate === '0') {
 		reformMsgD = `<span class="reform-value">no additional units</span> could be built.`;
@@ -93,6 +94,7 @@
 	}
 
 	// --- Reform Definition tooltip
+	let infoIcon = infoIconDefault;
 	$: showTooltip = [
 		'plexify_reform',
 		'multiply_reform',
@@ -143,7 +145,13 @@
 					on:update={(e) => handleUpdate('reformType', e)}
 				/>
 				{#if showTooltip}
-					<div id="reform-tooltip-container" data-tooltip={currentDefinition}>
+					<div
+						id="reform-tooltip-container"
+						data-tooltip={currentDefinition}
+						on:focus={() => (infoIcon = infoIconHovered)}
+						on:mouseover={() => (infoIcon = infoIconHovered)}
+						on:mouseleave={() => (infoIcon = infoIconDefault)}
+					>
 						<img id="reform-tooltip" src={infoIcon} alt="" />
 					</div>
 				{/if}
@@ -173,6 +181,9 @@
 					<LegendQuantile legendProps={$demographicLayerLegend} width={265} height={60} />
 				</div>
 			</div>
+			{#if showTooltip}
+				<div class="reform-definition">* {currentDefinition}</div>
+			{/if}
 		</div>
 	{/if}
 </div>
@@ -217,6 +228,12 @@
 		&:hover {
 			opacity: 0.9;
 		}
+	}
+
+	.reform-definition {
+		margin-top: 8px;
+		font-size: var(--text-sm);
+		line-height: var(--leading-normal);
 	}
 
 	.control-section {
