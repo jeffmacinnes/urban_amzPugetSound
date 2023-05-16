@@ -42,7 +42,7 @@ export const demographicOpts = readable([
 	{ display: 'Population density', key: 'Pop_density' },
 	{ display: 'Median household income', key: 'Med_HH_inc' },
 	{ display: 'Share of white households', key: 'White_non_hisp' },
-	{ display: 'Share of Black housholds', key: 'Black_non_hisp' },
+	{ display: 'Share of Black households', key: 'Black_non_hisp' },
 	{ display: 'Share of Latino/a households', key: 'Hispanic' },
 	{ display: 'Share of Asian households', key: 'Asian_non_Hisp' },
 	{ display: 'Job density', key: 'Job_density' },
