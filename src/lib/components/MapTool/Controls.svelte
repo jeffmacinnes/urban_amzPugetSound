@@ -85,12 +85,12 @@
 		reformMsgC = ', ';
 	} else {
 		reformMsgB = 'If policymakers enacted the ';
-		reformMsgC = ` zoning change `;
+		reformMsgC = ` zoning `;
 	}
 	$: if (reformDiffEstimate === '0') {
-		reformMsgD = `, <span class="reform-value">no additional units</span> could be built.`;
+		reformMsgD = `<span class="reform-value">no additional units</span> could be built.`;
 	} else {
-		reformMsgD = `, an additional <span class="reform-value">${reformDiffEstimate} units</span> could be built.`;
+		reformMsgD = `an additional <span class="reform-value">${reformDiffEstimate} units</span> could be built.`;
 	}
 
 	// --- Reform Definition tooltip
@@ -155,6 +155,7 @@
 					>
 						<img id="reform-tooltip" src={infoIcon} alt="" />
 					</div>
+					{@html ` change, `}
 				{/if}
 				{@html reformMsgD}
 			</div>
