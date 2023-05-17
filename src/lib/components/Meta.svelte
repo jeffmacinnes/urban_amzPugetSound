@@ -18,13 +18,13 @@
 
 	<meta property="og:image" content="{url}/social.png" />
 	<meta property="og:image:width" content="1200" />
-	<meta property="og:image:height" content="600" />
+	<meta property="og:image:height" content="675" />
 
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={title} />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
-	<meta name="twitter:image:src" content="{url}/social.png" />
+	<meta name="twitter:image:src" content="{url}/social.jpg" />
 
 	<meta name="robots" content="max-image-preview:large" />
 

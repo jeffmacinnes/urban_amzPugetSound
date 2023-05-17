@@ -85,12 +85,12 @@
 		reformMsgC = ', ';
 	} else {
 		reformMsgB = 'If policymakers enacted the ';
-		reformMsgC = ` zoning* change, `;
+		reformMsgC = ` zoning change `;
 	}
 	$: if (reformDiffEstimate === '0') {
-		reformMsgD = `<span class="reform-value">no additional units</span> could be built.`;
+		reformMsgD = `, <span class="reform-value">no additional units</span> could be built.`;
 	} else {
-		reformMsgD = `an additional <span class="reform-value">${reformDiffEstimate} units</span> could be built.`;
+		reformMsgD = `, an additional <span class="reform-value">${reformDiffEstimate} units</span> could be built.`;
 	}
 
 	// --- Reform Definition tooltip
@@ -144,6 +144,7 @@
 					currentValue={$reformType}
 					on:update={(e) => handleUpdate('reformType', e)}
 				/>
+				{@html reformMsgC}
 				{#if showTooltip}
 					<div
 						id="reform-tooltip-container"
@@ -155,8 +156,6 @@
 						<img id="reform-tooltip" src={infoIcon} alt="" />
 					</div>
 				{/if}
-
-				{@html reformMsgC}
 				{@html reformMsgD}
 			</div>
 
@@ -181,9 +180,9 @@
 					<LegendQuantile legendProps={$demographicLayerLegend} width={265} height={60} />
 				</div>
 			</div>
-			{#if showTooltip}
+			<!-- {#if showTooltip}
 				<div class="reform-definition">* {currentDefinition}</div>
-			{/if}
+			{/if} -->
 		</div>
 	{/if}
 </div>
@@ -216,7 +215,7 @@
 		display: inline-block;
 		position: relative;
 		top: 4px;
-		margin-right: 4px;
+		margin-left: 0px;
 		cursor: pointer;
 	}
 
