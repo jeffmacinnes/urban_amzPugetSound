@@ -38,7 +38,7 @@
 	</div>
 
 	<div class="eyebrow">{text.eyebrow}</div>
-	<h1 class="title">{text.title}</h1>
+	<h1 class="title">{@html text.title}</h1>
 	<p class="subtitle"><i>{text.subtitle}</i></p>
 	<div class="date">June 2023</div>
 
@@ -95,7 +95,7 @@
 
 	.title {
 		text-align: center;
-		max-width: 768px;
+		max-width: 1000px;
 	}
 
 	.subtitle {
