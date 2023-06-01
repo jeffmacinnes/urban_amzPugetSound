@@ -14,7 +14,7 @@ All data used locally by the site is found in `src/lib/data`
 
 ## Developing
 
-The site is built using Svelte, and the project scaffolding borrows heavily from the terrific https://github.com/the-pudding/svelte-starter. Project files are `src/` directory.
+The site is built using SvelteKit. See `src/` directory for project files.
 
 To install dependencies:
 
@@ -27,6 +27,47 @@ To run the development server
 ```bash
 npm run dev
 ```
+
+### Site Copy and Colors
+
+_Credit to the terrific https://github.com/the-pudding/svelte-starter for this approach_
+
+#### Site Copy
+
+Most of the copy lives in a google doc. Edits to this document need to be manually pulled in to the site and redeployed before they are live. To do so:
+
+```bash
+npm run gdoc
+```
+
+or, from the `scripts/` dir:
+
+```bash
+node fetch-google.js
+```
+
+This script will pull down the google doc (which is written using http://archieml.org/ syntax) defined by the `id` specified in `scripts/fetch-google.js`, and convert it to json and save as `src/lib/data/siteCopy.json`. The site parses the contents of this json file to populate the site text.
+
+#### Colors
+
+Site colors are defined in `properties/colors.json`, and then a script converts these values to both css and json. In this way, a single source of truth can be used to define colors that can be used in both the css styles and javascript.
+
+To update colors, edit `properties/colors.json` and then run:
+
+```bash
+npm run style
+```
+
+or, from the `scripts/` dir:
+
+```bash
+node style-dictionary.js
+```
+
+This script will produce 2 files:
+
+- `src/lib/data/variables.json` (for importing into javascript files)
+- `src/styles/variables.css` (automatically imported by `app.css`. Defines css variables that are usable by any style tag)
 
 ## Deploy
 

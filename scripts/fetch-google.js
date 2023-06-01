@@ -8,11 +8,13 @@ const CWD = process.cwd();
 
 const docs = [
 	{
-		id: '1aUdY-2B1StKNpTJkRcn9ahiOjSQnUbP-oDkYXs8OKP0',
+		// id: '1aUdY-2B1StKNpTJkRcn9ahiOjSQnUbP-oDkYXs8OKP0',
+		id: '1suCSOPpeFrPooXsNARrkKWKFFB8sW2njnYi3Y-rlDzI',
 		filepath: '../src/lib/data/siteCopy.json'
 	},
 	{
-		id: '1hKKKGBlhopelncH4sze2Dwrh8shhPAwjkJzZU5BFY-8',
+		// id: '1hKKKGBlhopelncH4sze2Dwrh8shhPAwjkJzZU5BFY-8',
+		id: '1XUdvIkUhVBWqvMtowDG-9d1AQ1E_kkAye67mGvd-RS0',
 		gid: '0',
 		filepath: '../src/lib/data/scrollyLocations.json'
 	}
