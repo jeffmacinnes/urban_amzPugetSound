@@ -77,12 +77,12 @@
 	$: reformMsgA = ` currently has <span class="existing-value">${existingEstimate} housing units</span> within a half mile of transit and is zoned for a maxiumum of <span class="current-value">${baselineEstimate} units</span>.`;
 	$: if ($reformType === 'all_reforms') {
 		// i.e. "Enacted all"
-		reformMsgB = 'If policymakers ';
+		reformMsgB = 'If policymakers enacted ';
 		reformMsgC = ' zoning changes, ';
 	} else if ($reformType === 'baseline_under_zoning') {
 		// i.e. "No Zoning Changes"
 		reformMsgB = 'If policymakers enact ';
-		reformMsgC = ', ';
+		reformMsgC = ' zoning changes, ';
 	} else {
 		reformMsgB = 'If policymakers enacted the ';
 		reformMsgC = ` zoning `;

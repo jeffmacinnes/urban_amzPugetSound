@@ -23,7 +23,7 @@
 
 	<div class="title">{keyTitle}</div>
 	<div class="hover-instructions">
-		hover over a station to see three measures of housing density:
+		Hover over a station to see three measures of housing density:
 	</div>
 	<div class="image-container">
 		<img

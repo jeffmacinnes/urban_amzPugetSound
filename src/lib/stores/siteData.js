@@ -54,12 +54,12 @@ export const demographicOpts = readable([
 ]);
 
 export const reformTypeOpts = readable([
-	{ display: 'No Zoning Changes', key: 'baseline_under_zoning' },
+	{ display: 'No', key: 'baseline_under_zoning' },
 	{ display: 'Plexify', key: 'plexify_reform' },
+	{ display: 'Missing Middle', key: 'middle_reform' },
 	{ display: 'Multiply', key: 'multiply_reform' },
 	{ display: 'Legalize', key: 'legalize_reform' },
-	{ display: 'Missing Middle', key: 'middle_reform' },
-	{ display: 'Enacted All', key: 'all_reforms' }
+	{ display: 'All', key: 'all_reforms' }
 ]);
 
 // Set initial values (should be the "key" prop of desired value of corresponding opt)
